@@ -24,22 +24,22 @@ a {
   text-decoration: none;
 }
 
-#form:link {
+.form:link {
   font-size: 15px;
   color: #265c83;
   text-decoration: underline;
 }
-#form:hover {
+.form:hover {
   font-size: 15px;
   color: #7fdbff;
   text-decoration: underline;
 }
-#form:active {
+.form:active {
   font-size: 15px;
   color: #007be6;
   text-decoration: underline;
 }
-#form:visited {
+.form:visited {
   font-size: 15px;
   color: #265c83;
   text-decoration: underline;
