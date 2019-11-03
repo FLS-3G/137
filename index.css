@@ -23,6 +23,28 @@ a {
   color: #000000;
   text-decoration: none;
 }
+
+#form:link {
+  font-size: 15px;
+  color: #265c83;
+  text-decoration: underline;
+}
+#form:hover {
+  font-size: 15px;
+  color: #7fdbff;
+  text-decoration: underline;
+}
+#form:active {
+  font-size: 15px;
+  color: #007be6;
+  text-decoration: underline;
+}
+#form:visited {
+  font-size: 15px;
+  color: #265c83;
+  text-decoration: underline;
+}
+
 ul {
   padding: 16px 0px;
   flex-direction: row;
