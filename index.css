@@ -297,6 +297,10 @@ h3 {
 .text_section {
   padding-bottom: 60px;
 }
+.text_section2 {
+  padding-bottom: 30px;
+}
+
 .section-link {
   transition-duration: 0.5s;
   transform-origin: center;
@@ -358,6 +362,20 @@ a.active:after {
   transition-duration: 0.3s;
 }
 .fitImage {
-  max-width: 99%;
-  max-height: 99%;
+  max-width: 49%;
+  max-height: 49%;
+}
+
+td {
+  text-align: left;
+  padding: 5px;
+}
+th {
+  text-align: left;
+  padding: 5px;
+}
+
+#roles {
+  width: 100%;
+  table-layout: auto;
 }
