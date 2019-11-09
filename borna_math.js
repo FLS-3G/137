@@ -73,8 +73,7 @@ function calculateInitialAngle(points, facing) {
         }
       }
     }
-    console.log((start * 180) / Math.PI) * -1;
-    console.log(facing);
+
     return ((start * 180) / Math.PI) * -1;
   } else if (checkForDirection === "backwards") {
     if (facing === "right") {
@@ -120,7 +119,7 @@ function calculateInitialAngle(points, facing) {
         }
       }
     }
-    console.log((start * 180) / Math.PI);
+
     return ((start * 180) / Math.PI) * -1;
   }
   console.warn("Invalid checkForDirection yo! Pls fix! ");

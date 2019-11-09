@@ -415,45 +415,56 @@ function handleGenerateClick(event) {
   invisibleLink.click();
 }
 
-// TODO: DEBUG
-function generateTestSample(shift) {
-  foobar = [
-    {
-      x: 0,
-      y: 0
-    },
-    {
-      x: 50,
-      y: 50
-    },
-    {
-      x: 100,
-      y: 50
-    },
-    {
-      x: 50,
-      y: 0
-    },
-    {
-      x: 100,
-      y: 0
-    }
-  ];
-
-  foobar.forEach((item, index) => {
-    setTimeout(
-      () => addCoord(undefined, item.x, item.y, shift, true),
-      index * 200
-    );
-  });
+function advancedMode() {
+  var advancedmodeid = document.getElementById("AdvMode");
+  var displayadv = advancedmodeid.style.display;
+  if (displayadv == "block") {
+    advancedmodeid.style.display = "none";
+  } else {
+    advancedmodeid.style.display = "block";
+  }
 }
-function advancedMode(){
-    var advancedmodeid = document.getElementById('AdvMode');
-    var displayadv = advancedmodeid.style.display
-    if (displayadv == 'block') {
-      advancedmodeid.style.display = 'none';
-    }
-    else {
-      advancedmodeid.style.display = 'block';
-    }
+
+function wallAlign(points) {
+  shift = event.shiftKey;
+  if (points.length < 1) {
+    return;
+  }
+
+  var distanceToFront = document.getElementById("textboxA").value;
+  var distanceToBack = document.getElementById("textboxB").value;
+  useDistance = distanceToFront;
+  if (shift) {
+    var useDistance = distanceToBack;
+  }
+
+  var lastCoord = points[points.length - 1];
+  var xOld = lastCoord.coordinates[0];
+  var yOld = lastCoord.coordinates[1];
+  xOld = Math.floor(xOld / 3.386);
+  yOld = Math.floor((387 - yOld) / 3.386);
+  var xNew = 0 + useDistance;
+  var yNew = yOld;
+  var min = xOld;
+  var wall = 1;
+
+  if (236 - xOld < min) {
+    min = 236 - xOld;
+    wall = 3;
+    xNew = 236 - useDistance;
+    yNew = yOld;
+  }
+  if (yOld < min) {
+    min = yOld;
+    wall = 4;
+    xNew = xOld;
+    yNew = 0 + useDistance;
+  }
+  if (114 - yOld < min) {
+    min = 114 - yOld;
+    wall = 2;
+    xNew = xOld;
+    yNew = 114 - useDistance;
+  }
+  addCoord(undefined, xNew, yNew, shift, true);
 }

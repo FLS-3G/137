@@ -113,17 +113,19 @@
          </div>
        </div>
      </div>
+
      <div  id="AdvMode">
       a:
-      <input type="number" id="textboxA" class="input_box">
+      <input type="number" id="textboxA" class="input_box" value= 0 >
       b:
-      <input type="number" id="textboxB" class="input_box">
+      <input type="number" id="textboxB" class="input_box" value= 12>
       c:
       <input type="number" id="textboxC" class="input_box">
-      <button id="alignButton" type="button" onclick="FUNKCIJA" >Align</button>
-      <button id="squaring" type="button" onclick="FUNKCIJA">Squaring</button>
+      <button id="alignButton" type="button" onclick="wallAlign(points)" >Wall Align</button>
+      <button id="squaring" type="button" onclick="FUNKCIJA">Line Squaring</button>
       <button id="generateADV" type="button" onclick="FUNKCIJA">Generate ADV</button>
      </div>
+
      <div style="display: flex;">
        <div
          id="canvasDivisor"
