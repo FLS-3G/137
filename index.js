@@ -219,6 +219,11 @@ function clearPath(canvasContext, img) {
 
 function update(points, redoList) {
   generateEstimate();
+  if (points.length === 0) {
+    document.getElementById("alignButton").setAttribute("disabled", "");
+  } else {
+    document.getElementById("alignButton").removeAttribute("disabled");
+  }
 
   if (points.length === 0) {
     document.getElementById("Undo").setAttribute("disabled", "");
