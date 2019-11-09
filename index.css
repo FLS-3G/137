@@ -187,6 +187,13 @@ body {
   overflow: hidden;
   align-items: center;
 }
+#AdvMode{
+  font-size: 15px;
+  flex-direction: row;
+  display: none;
+  overflow: hidden;
+  align-items: center;
+}
 .input_box {
   width: 56px;
   height: 24px;

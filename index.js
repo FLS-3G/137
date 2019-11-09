@@ -447,3 +447,13 @@ function generateTestSample(shift) {
     );
   });
 }
+function advancedMode(){
+    var advancedmodeid = document.getElementById('AdvMode');
+    var displayadv = advancedmodeid.style.display
+    if (displayadv == 'block') {
+      advancedmodeid.style.display = 'none';
+    }
+    else {
+      advancedmodeid.style.display = 'block';
+    }
+}
