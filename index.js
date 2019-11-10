@@ -174,8 +174,8 @@ function onCanvasClick(event) {
   redraw(ctx, img, points);
   addLiElement(
     "orderedList",
-    Math.floor(x / 3.386),
-    Math.floor((y / 3.386) * -1 + 114.29)
+    Math.round(x / 3.386),
+    Math.round((y / 3.386) * -1 + 114.29)
   );
   redoList = [];
   generateLists(points, speed);
@@ -315,8 +315,8 @@ function redoButton(redoList, points) {
     points.push(current);
     addLiElement(
       "orderedList",
-      Math.floor(current.coordinates[0] / 3.386),
-      Math.floor((current.coordinates[1] / 3.386) * -1 + 114.29)
+      Math.round(current.coordinates[0] / 3.386),
+      Math.round((current.coordinates[1] / 3.386) * -1 + 114.29)
     );
   }
 
@@ -341,7 +341,7 @@ function addCoord(
   } else {
     if (shift) {
       points.push({
-        coordinates: [Math.floor(3.386 * x), Math.floor(387 - 3.386 * y)],
+        coordinates: [Math.round(3.386 * x), Math.round(387 - 3.386 * y)],
         direction: "backwards",
         type: "waypoint",
         actionsYesOrNo: 0,
@@ -349,7 +349,7 @@ function addCoord(
       });
     } else {
       points.push({
-        coordinates: [Math.floor(3.386 * x), Math.floor(387 - 3.386 * y)],
+        coordinates: [Math.round(3.386 * x), Math.round(387 - 3.386 * y)],
         direction: "forwards",
         type: "waypoint",
         actionsYesOrNo: 0,
@@ -446,8 +446,8 @@ function wallAlign(points) {
   var lastCoord = points[points.length - 1];
   var xOld = lastCoord.coordinates[0];
   var yOld = lastCoord.coordinates[1];
-  xOld = Math.floor(xOld / 3.386);
-  yOld = Math.floor((387 - yOld) / 3.386);
+  xOld = Math.round(xOld / 3.386);
+  yOld = Math.round((387 - yOld) / 3.386);
   var xNew = 0 + useDistance;
   var yNew = yOld;
   var min = xOld;
