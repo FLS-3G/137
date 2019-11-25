@@ -1,6 +1,6 @@
 function clearCanvas(canvasContext, img) {
   canvasContext.clearRect(0, 0, 800, 400);
-  canvasContext.globalAlpha = 0.5;
+  canvasContext.globalAlpha = 0.8;
   canvasContext.drawImage(img, 0, 0, 800, 400);
   canvasContext.globalAlpha = 1;
 }
@@ -108,6 +108,9 @@ function drawLine(canvasContext, pointA, pointB) {
   if (pointB.direction === "forwards") {
     colorLine(canvasContext, pointA, pointB, "#831100", 7);
     colorLine(canvasContext, pointA, pointB, "#FF2600", 3);
+  } else if (pointB.direction === "alignment") {
+    colorLine(canvasContext, pointA, pointB, "#188B08", 7);
+    colorLine(canvasContext, pointA, pointB, "#00cd00", 3);
   } else {
     colorLine(canvasContext, pointA, pointB, "#002E7A", 7);
     colorLine(canvasContext, pointA, pointB, "#0433FF", 3);
@@ -224,6 +227,11 @@ function update(points, redoList) {
   } else {
     document.getElementById("alignButton").removeAttribute("disabled");
   }
+  if (points.length <= 1) {
+    document.getElementById("squaring").setAttribute("disabled", "");
+  } else {
+    document.getElementById("squaring").removeAttribute("disabled");
+  }
 
   if (points.length === 0) {
     document.getElementById("Undo").setAttribute("disabled", "");
@@ -334,12 +342,28 @@ function addCoord(
   if (!override) {
     x = document.getElementById("x_coord").value;
     y = document.getElementById("y_coord").value;
-    shift = event.shiftKey;
+    var shiftCheck = event.shiftKey;
+  }
+  if (shiftCheck === true) {
+    shift = 2;
+  } else if (shiftCheck === false) {
+    shift = undefined;
+  } else {
+    shift = 1;
   }
 
   if (x === "" || y === "") {
   } else {
-    if (shift) {
+    if (shift === 1) {
+      points.push({
+        coordinates: [Math.round(3.386 * x), Math.round(387 - 3.386 * y)],
+        direction: "alignment",
+        type: "waypoint",
+        actionsYesOrNo: 2,
+        speedOfLine: document.querySelector("#speed").value
+      });
+    }
+    if (shift === 2) {
       points.push({
         coordinates: [Math.round(3.386 * x), Math.round(387 - 3.386 * y)],
         direction: "backwards",
@@ -347,7 +371,7 @@ function addCoord(
         actionsYesOrNo: 0,
         speedOfLine: document.querySelector("#speed").value
       });
-    } else {
+    } else if (shift === undefined) {
       points.push({
         coordinates: [Math.round(3.386 * x), Math.round(387 - 3.386 * y)],
         direction: "forwards",
@@ -431,7 +455,11 @@ function advancedMode() {
 }
 
 function wallAlign(points) {
-  shift = event.shiftKey;
+  if (event.shiftKey) {
+    shift = 2;
+  } else {
+    shift = undefined;
+  }
   if (points.length < 1) {
     return;
   }
@@ -439,7 +467,8 @@ function wallAlign(points) {
   var distanceToFront = document.getElementById("textboxA").value;
   var distanceToBack = document.getElementById("textboxB").value;
   useDistance = distanceToFront;
-  if (shift) {
+
+  if (shift === 2) {
     var useDistance = distanceToBack;
   }
 
@@ -472,4 +501,325 @@ function wallAlign(points) {
     yNew = 114 - useDistance;
   }
   addCoord(undefined, xNew, yNew, shift, true);
+}
+
+function lineSquaring(points) {
+  var blackLines = [
+    {
+      number: 1,
+      function: [1000000, -63999947],
+      coordinates: [[64, 53], [64, 73]]
+    },
+    { number: 2, function: [0, 73], coordinates: [[64, 73], [82, 73]] },
+    {
+      number: 3,
+      function: [1000000, -81999927],
+      coordinates: [[82, 73], [82, 93]]
+    },
+    {
+      number: 4,
+      function: [-1.0385, 185.3462],
+      coordinates: [[87, 95], [113, 68]]
+    },
+    {
+      number: 5,
+      function: [1000000, -112999932],
+      coordinates: [[113, 59], [113, 68]]
+    },
+    {
+      number: 6,
+      function: [1.0667, -61.5333],
+      coordinates: [[98, 43], [113, 59]]
+    },
+    { number: 7, function: [0, 43], coordinates: [[80, 43], [98, 43]] },
+    {
+      number: 8,
+      function: [1.0833, -43.6667],
+      coordinates: [[68, 30], [80, 43]]
+    },
+    { number: 9, function: [0, 22], coordinates: [[92, 22], [152, 22]] },
+    { number: 10, function: [0, 19], coordinates: [[153, 19], [168, 19]] },
+    { number: 11, function: [0, 22], coordinates: [[169, 22], [200, 22]] },
+    {
+      number: 12,
+      function: [-1.8333, 337.6667],
+      coordinates: [[146, 70], [170, 26]]
+    },
+    {
+      number: 13,
+      function: [0.6176, -58.9118],
+      coordinates: [[165, 43], [199, 64]]
+    },
+    {
+      number: 14,
+      function: [1000000, -168999911],
+      coordinates: [[169, 89], [169, 114]]
+    }
+  ];
+
+  var sensorDistance = Number(document.getElementById("textboxC").value);
+
+  var robotCoord1 = points[points.length - 1].coordinates;
+  var robotCoord2 = points[points.length - 2].coordinates;
+
+  if (
+    Math.round(robotCoord1[0] / 3.386) === Math.round(robotCoord2[0] / 3.386) &&
+    Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >
+      Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+  ) {
+    var robotSlope = [
+      1000000,
+      -1000000 * Math.round(robotCoord1[0] / 3.386) +
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+    ];
+  } else if (
+    Math.round(robotCoord1[0] / 3.386) === Math.round(robotCoord2[0] / 3.386) &&
+    Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) <
+      Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+  ) {
+    var robotSlope = [
+      -1000000,
+      1000000 * Math.round(robotCoord1[0] / 3.386) +
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+    ];
+  } else {
+    var robotSlope = calculateSlope(
+      Math.round(robotCoord1[0] / 3.386),
+      Math.round(robotCoord2[0] / 3.386),
+      Math.round((robotCoord1[1] / 3.386) * -1 + 114.29),
+      Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+    );
+  }
+
+  var blackLineIntersections = [];
+  var validIntersections = [];
+
+  for (i = 0; i < 14; i++) {
+    blackLineIntersections.push(
+      calculateIntersection(robotSlope, blackLines[i].function)
+    );
+  }
+
+  for (i = 0; i < 14; i++) {
+    if (blackLines[i].function[0] === 1000000) {
+      if (
+        blackLineIntersections[i][1] > blackLines[i].coordinates[0][1] &&
+        blackLineIntersections[i][1] < blackLines[i].coordinates[1][1]
+      ) {
+        validIntersections.push(blackLines[i]);
+      }
+    } else {
+      if (
+        blackLineIntersections[i][0] > blackLines[i].coordinates[0][0] &&
+        blackLineIntersections[i][0] < blackLines[i].coordinates[1][0]
+      ) {
+        validIntersections.push(blackLines[i]);
+      }
+    }
+  }
+
+  var validIntersectionCoordinates = [];
+  for (i = 0; i < validIntersections.length; i++) {
+    validIntersectionCoordinates.push(
+      calculateIntersection(robotSlope, validIntersections[i].function)
+    );
+  }
+
+  var directionalIntersections = [];
+
+  for (i = 0; i < validIntersections.length; i++) {
+    if (
+      (robotSlope[0] < 0 &&
+        Math.round(robotCoord2[0] / 3.386) <=
+          Math.round(robotCoord1[0] / 3.386)) ||
+      (robotSlope[0] > 0 &&
+        Math.round(robotCoord2[0] / 3.386) >=
+          Math.round(robotCoord1[0] / 3.386))
+    ) {
+      if (
+        validIntersectionCoordinates[i][1] <
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+      ) {
+        directionalIntersections.push(validIntersections[i]);
+      }
+    } else if (
+      (robotSlope[0] > 0 &&
+        Math.round(robotCoord2[0] / 3.386) <=
+          Math.round(robotCoord1[0] / 3.386)) ||
+      (robotSlope[0] < 0 &&
+        Math.round(robotCoord2[0] / 3.386) >=
+          Math.round(robotCoord1[0] / 3.386))
+    ) {
+      if (
+        validIntersectionCoordinates[i][1] >
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+      ) {
+        directionalIntersections.push(validIntersections[i]);
+      }
+    } else {
+      if (
+        Math.round(robotCoord2[0] / 3.386) < Math.round(robotCoord1[0] / 3.386)
+      ) {
+        if (
+          validIntersectionCoordinates[i][0] >
+          Math.round(robotCoord1[0] / 3.386)
+        ) {
+          directionalIntersections.push(validIntersections[i]);
+        }
+      } else {
+        if (
+          validIntersectionCoordinates[i][0] <
+          Math.round(robotCoord1[0] / 3.386)
+        ) {
+          directionalIntersections.push(validIntersections[i]);
+        }
+      }
+    }
+  }
+  var directionalIntersectionsCoordinates = [];
+  for (i = 0; i < directionalIntersections.length; i++) {
+    directionalIntersectionsCoordinates.push(
+      calculateIntersection(robotSlope, directionalIntersections[i].function)
+    );
+  }
+  var distanceFormula = [];
+  var smallestDistance = 1000000;
+  var rememberI = 0;
+  for (i = 0; i < directionalIntersectionsCoordinates.length; i++) {
+    distanceFormula.push(
+      Math.sqrt(
+        (directionalIntersectionsCoordinates[i][0] -
+          Math.round(robotCoord1[0] / 3.386)) **
+          2 +
+          (directionalIntersectionsCoordinates[i][1] -
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)) **
+            2
+      )
+    );
+    if (distanceFormula[i] < smallestDistance) {
+      rememberI = i;
+      smallestDistance = distanceFormula[i];
+    }
+  }
+
+  var lineSlope = directionalIntersections[rememberI].function;
+
+  var finalCoords = calculateIntersection(robotSlope, lineSlope);
+
+  var circleCustom = [finalCoords[0], finalCoords[1], sensorDistance];
+  if (lineSlope[0] === 0) {
+    var oppositeSlope = [1000000, -1000000 * finalCoords[0] + finalCoords[1]];
+  } else {
+    var oppositeSlope = [
+      -1 / lineSlope[0],
+      (1 / lineSlope[0]) * finalCoords[0] + finalCoords[1]
+    ];
+  }
+
+  var circleIntersections = calculateIntersectionWithCircle(
+    circleCustom,
+    oppositeSlope
+  );
+  var circleIntersection1 = circleIntersections[0];
+  var circleIntersection2 = circleIntersections[1];
+
+  var assistantSlope1 = [
+    lineSlope[0],
+    -1 * lineSlope[0] * circleIntersection1[0] + circleIntersection1[1]
+  ];
+  var assistantSlope2 = [
+    lineSlope[0],
+    -1 * lineSlope[0] * circleIntersection2[0] + circleIntersection2[1]
+  ];
+
+  var solution1 = calculateIntersection(assistantSlope1, robotSlope);
+  var solution2 = calculateIntersection(assistantSlope2, robotSlope);
+
+  var distance1 = Math.sqrt(
+    (solution1[0] - robotCoord1[0] / 3.386) ** 2 +
+      (solution1[1] - ((robotCoord1[1] / 3.386) * -1 + 114.29)) ** 2
+  );
+
+  var distance2 = Math.sqrt(
+    (solution2[0] - robotCoord1[0] / 3.386) ** 2 +
+      (solution2[1] - ((robotCoord1[1] / 3.386) * -1 + 114.29)) ** 2
+  );
+
+  if (distance1 < distance2) {
+    var finalSolution = solution1;
+  } else {
+    var finalSolution = solution2;
+  }
+
+  addCoord(
+    undefined,
+    Math.round(finalSolution[0]),
+    Math.round(finalSolution[1]),
+    1,
+    true
+  );
+}
+
+function calculateIntersectionWithCircle(circle, slope) {
+  var xCircle = circle[0];
+  var yCircle = circle[1];
+  var circleRadius = circle[2];
+  var a = slope[0];
+  var b = slope[1];
+  var x1 =
+    (xCircle -
+      a * b +
+      a * yCircle -
+      Math.sqrt(
+        -a * a * xCircle * xCircle +
+          2 * a * yCircle * xCircle -
+          2 * a * b * xCircle +
+          a * a * circleRadius * circleRadius +
+          2 * b * yCircle +
+          circleRadius * circleRadius -
+          b * b -
+          yCircle * yCircle
+      )) /
+    (1 + a * a);
+
+  var x2 =
+    (xCircle -
+      a * b +
+      a * yCircle +
+      Math.sqrt(
+        -a * a * xCircle * xCircle +
+          2 * a * yCircle * xCircle -
+          2 * a * b * xCircle +
+          a * a * circleRadius * circleRadius +
+          2 * b * yCircle +
+          circleRadius * circleRadius -
+          b * b -
+          yCircle * yCircle
+      )) /
+    (1 + a * a);
+
+  var y1 = a * x1 + b;
+  var y2 = a * x2 + b;
+  var coordinate1 = [x1, y1];
+  var coordinate2 = [x2, y2];
+  var coordinates = [coordinate1, coordinate2];
+  return coordinates;
+}
+
+function calculateSlope(x1, x2, y1, y2) {
+  var a = (y1 - y2) / (x1 - x2);
+  var b = -1 * a * x1 + y1;
+  var c = [a, b];
+  return c;
+}
+
+function calculateIntersection(slope1, slope2) {
+  var a1 = slope1[0];
+  var a2 = slope2[0];
+  var b1 = slope1[1];
+  var b2 = slope2[1];
+  var x = (b2 - b1) / (a1 - a2);
+  var y = a1 * x + b1;
+  var c = [x, y];
+  return c;
 }

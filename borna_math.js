@@ -279,11 +279,22 @@ function movement(angle, distance, speed) {
   return `2${ln}${angle}${ln}${distance}${ln}${speed}${ln}`;
 }
 
+function alignment(speed) {
+  return `4${ln}${speed}${ln}`;
+}
+
 function makeTextBox(points, wheelSize, angles, speedOfLine) {
   var axleLength = document.getElementById("axleLength").value;
+  var numberOfMovements = 1;
+  var listForGeneration = points;
 
   if (points.length > 0) {
-    var numberOfMovements = points.length - 1;
+    numberOfMovements = points.length - 1;
+    for (i = 0; i < points.length; i++) {
+      if (points[i].actionsYesOrNo === 1) {
+        numberOfMovements = numberOfMovements + 1;
+      }
+    }
   } else {
     var numberOfMovements = 0;
   }
@@ -299,22 +310,27 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
   textBox += ln;
 
   let action_id = 0;
+  var counter = 0;
+  var listOfSpeeds = [];
+  for (i = 0; i < listForGeneration.length - 1; i++) {
+    listOfSpeeds.push(listForGeneration[i].speedOfLine);
+  }
 
-  points.forEach((point, index) => {
-    if (point.actionsYesOrNo === 1) {
-      // add 3
-      textBox += action(++action_id);
-    }
-
-    if (index !== points.length - 1) {
-      // 2
+  for (i = 1; i < listForGeneration.length; i++) {
+    if (listForGeneration[i].actionsYesOrNo !== 2) {
       textBox += movement(
-        angles[index],
-        lengths[index] / 3.386 / (wheelSize * Math.PI),
-        point.speedOfLine
+        angles[i - 1],
+        lengths[i - 1] / 3.386 / (wheelSize * Math.PI),
+        points[i - 1].speedOfLine
       );
+      if (listForGeneration[i].actionsYesOrNo === 1) {
+        textBox += action(++action_id);
+      }
     }
-  });
+    if (listForGeneration[i].actionsYesOrNo === 2) {
+      textBox += alignment(points[i - 1].speedOfLine);
+    }
+  }
 
   textBox = textBox.replace(/NaN/g, "0");
 
