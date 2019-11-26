@@ -95,13 +95,386 @@ function drawCircle(canvasContext, point, color) {
 }
 
 function drawPoints(canvasContext, points) {
-  for (var i = 0; i < points.length; i++) {
-    if (points[i].actionsYesOrNo === 1) {
-      drawCircle(canvasContext, points[i], "#00cd00");
-    } else {
-      drawCircle(canvasContext, points[i], "yellow");
+  var distanceToFront = Number(document.getElementById("textboxA").value);
+  var distanceToBack = Number(document.getElementById("textboxB").value);
+  var distanceToSide = Number(document.getElementById("textboxD").value);
+  if (points.length === 0) {
+  } else {
+    for (var j = 0; j < points.length; j++) {
+      if (j > 0) {
+        var direction = points[j].direction;
+        if (direction === "alignment") {
+          var blackLines = [
+            {
+              number: 1,
+              function: [1000000, -63999947],
+              coordinates: [[64, 53], [64, 73]]
+            },
+            { number: 2, function: [0, 73], coordinates: [[64, 73], [82, 73]] },
+            {
+              number: 3,
+              function: [1000000, -81999927],
+              coordinates: [[82, 73], [82, 93]]
+            },
+            {
+              number: 4,
+              function: [-1.0385, 185.3462],
+              coordinates: [[87, 95], [113, 68]]
+            },
+            {
+              number: 5,
+              function: [1000000, -112999932],
+              coordinates: [[113, 59], [113, 68]]
+            },
+            {
+              number: 6,
+              function: [1.0667, -61.5333],
+              coordinates: [[98, 43], [113, 59]]
+            },
+            { number: 7, function: [0, 43], coordinates: [[80, 43], [98, 43]] },
+            {
+              number: 8,
+              function: [1.0833, -43.6667],
+              coordinates: [[68, 30], [80, 43]]
+            },
+            {
+              number: 9,
+              function: [0, 22],
+              coordinates: [[92, 22], [152, 22]]
+            },
+            {
+              number: 10,
+              function: [0, 19],
+              coordinates: [[153, 19], [168, 19]]
+            },
+            {
+              number: 11,
+              function: [0, 22],
+              coordinates: [[169, 22], [200, 22]]
+            },
+            {
+              number: 12,
+              function: [-1.8333, 337.6667],
+              coordinates: [[146, 70], [170, 26]]
+            },
+            {
+              number: 13,
+              function: [0.6176, -58.9118],
+              coordinates: [[165, 43], [199, 64]]
+            },
+            {
+              number: 14,
+              function: [1000000, -168999911],
+              coordinates: [[169, 89], [169, 114]]
+            }
+          ];
+          var robotCoord1 = points[j].coordinates;
+          var robotCoord2 = points[j - 1].coordinates;
+          //------------------------------
+          if (points[j].direction === "backwards") {
+            var robotCoord1 = points[j - 1].coordinates;
+            var robotCoord2 = points[j].coordinates;
+          }
+          if (
+            Math.round(robotCoord1[0] / 3.386) ===
+              Math.round(robotCoord2[0] / 3.386) &&
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+          ) {
+            var robotSlope = [
+              1000000,
+              -1000000 * Math.round(robotCoord1[0] / 3.386) +
+                Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+            ];
+          } else if (
+            Math.round(robotCoord1[0] / 3.386) ===
+              Math.round(robotCoord2[0] / 3.386) &&
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) <
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+          ) {
+            var robotSlope = [
+              -1000000,
+              1000000 * Math.round(robotCoord1[0] / 3.386) +
+                Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+            ];
+          } else {
+            var robotSlope = calculateSlope(
+              Math.round(robotCoord1[0] / 3.386),
+              Math.round(robotCoord2[0] / 3.386),
+              Math.round((robotCoord1[1] / 3.386) * -1 + 114.29),
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+            );
+          }
+
+          //-----------------------------
+          var blackLineIntersections = [];
+          var validIntersections = [];
+
+          for (i = 0; i < 14; i++) {
+            blackLineIntersections.push(
+              calculateIntersection(robotSlope, blackLines[i].function)
+            );
+          }
+
+          for (i = 0; i < 14; i++) {
+            if (blackLines[i].function[0] === 1000000) {
+              if (
+                blackLineIntersections[i][1] >
+                  blackLines[i].coordinates[0][1] &&
+                blackLineIntersections[i][1] < blackLines[i].coordinates[1][1]
+              ) {
+                validIntersections.push(blackLines[i]);
+              }
+            } else {
+              if (
+                blackLineIntersections[i][0] >
+                  blackLines[i].coordinates[0][0] &&
+                blackLineIntersections[i][0] < blackLines[i].coordinates[1][0]
+              ) {
+                validIntersections.push(blackLines[i]);
+              }
+            }
+          }
+
+          var validIntersectionCoordinates = [];
+          for (i = 0; i < validIntersections.length; i++) {
+            validIntersectionCoordinates.push(
+              calculateIntersection(robotSlope, validIntersections[i].function)
+            );
+          }
+
+          var directionalIntersections = [];
+
+          for (i = 0; i < validIntersections.length; i++) {
+            if (
+              (robotSlope[0] < 0 &&
+                Math.round(robotCoord2[0] / 3.386) <=
+                  Math.round(robotCoord1[0] / 3.386)) ||
+              (robotSlope[0] > 0 &&
+                Math.round(robotCoord2[0] / 3.386) >=
+                  Math.round(robotCoord1[0] / 3.386))
+            ) {
+              if (
+                validIntersectionCoordinates[i][1] <
+                Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+              ) {
+                directionalIntersections.push(validIntersections[i]);
+              }
+            } else if (
+              (robotSlope[0] > 0 &&
+                Math.round(robotCoord2[0] / 3.386) <=
+                  Math.round(robotCoord1[0] / 3.386)) ||
+              (robotSlope[0] < 0 &&
+                Math.round(robotCoord2[0] / 3.386) >=
+                  Math.round(robotCoord1[0] / 3.386))
+            ) {
+              if (
+                validIntersectionCoordinates[i][1] >
+                Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+              ) {
+                directionalIntersections.push(validIntersections[i]);
+              }
+            } else {
+              if (
+                Math.round(robotCoord2[0] / 3.386) <
+                Math.round(robotCoord1[0] / 3.386)
+              ) {
+                if (
+                  validIntersectionCoordinates[i][0] >
+                  Math.round(robotCoord1[0] / 3.386)
+                ) {
+                  directionalIntersections.push(validIntersections[i]);
+                }
+              } else {
+                if (
+                  validIntersectionCoordinates[i][0] <
+                  Math.round(robotCoord1[0] / 3.386)
+                ) {
+                  directionalIntersections.push(validIntersections[i]);
+                }
+              }
+            }
+          }
+          var directionalIntersectionsCoordinates = [];
+          for (i = 0; i < directionalIntersections.length; i++) {
+            directionalIntersectionsCoordinates.push(
+              calculateIntersection(
+                robotSlope,
+                directionalIntersections[i].function
+              )
+            );
+          }
+          var distanceFormula = [];
+          var smallestDistance = 1000000;
+          var rememberI = 0;
+          for (i = 0; i < directionalIntersectionsCoordinates.length; i++) {
+            distanceFormula.push(
+              Math.sqrt(
+                (directionalIntersectionsCoordinates[i][0] -
+                  Math.round(robotCoord1[0] / 3.386)) **
+                  2 +
+                  (directionalIntersectionsCoordinates[i][1] -
+                    Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)) **
+                    2
+              )
+            );
+            if (distanceFormula[i] < smallestDistance) {
+              rememberI = i;
+              smallestDistance = distanceFormula[i];
+            }
+          }
+
+          var lineSlope = directionalIntersections[rememberI].function;
+          if (points) var oppositeSlope = 0;
+          if (
+            lineSlope[0] === 0 &&
+            directionalIntersections[rememberI].coordinates[0][1] <
+              robotCoord1[1]
+          ) {
+            oppositeSlope = 1000000;
+          } else if (
+            lineSlope[0] === 0 &&
+            directionalIntersections[rememberI].coordinates[0][1] >
+              robotCoord1[1]
+          ) {
+            oppositeSlope = -1000000;
+          } else {
+            oppositeSlope = -1 / lineSlope[0];
+          }
+
+          var xNew1 = points[j - 1].coordinates[0];
+          var xNew2 = points[j - 2].coordinates[0];
+          var yNew1 = oppositeSlope * xNew1;
+          var yNew2 = oppositeSlope * xNew2;
+
+          var deltaX = xNew1 - xNew2;
+          var deltaY = yNew1 - yNew2;
+
+          if (points[j - 1].direction === "backwards") {
+            var angle =
+              (Math.atan2(deltaY, deltaX) + Math.PI / 2) * (180 / Math.PI) * -1;
+          } else {
+            var angle =
+              (Math.atan2(deltaY, deltaX) + Math.PI / 2 - Math.PI) *
+              (180 / Math.PI) *
+              -1;
+          }
+          if (points[j].actionsYesOrNo === 1) {
+            drawCircle(canvasContext, points[j], "#00cd00");
+          } else {
+            drawCircle(canvasContext, points[j], "yellow");
+          }
+
+          if (document.getElementById("robotHitbox").checked) {
+            drawHitbox(
+              canvasContext,
+              distanceToFront,
+              distanceToBack,
+              distanceToSide,
+              points[j].coordinates[0],
+              points[j].coordinates[1],
+              angle
+            );
+          }
+        } else {
+          if (facing === "up") {
+            var angle = 0;
+          } else {
+            var angle = 90;
+          }
+          if (i < 1) {
+          } else {
+            var deltaX =
+              points[j].coordinates[0] - points[j - 1].coordinates[0];
+            var deltaY =
+              points[j].coordinates[1] - points[j - 1].coordinates[1];
+            var angle =
+              (Math.atan2(deltaY, deltaX) + Math.PI / 2) * (180 / Math.PI);
+            if (points[j].direction === "backwards") {
+              angle = angle + 180;
+            }
+          }
+
+          if (points[j].actionsYesOrNo === 1) {
+            drawCircle(canvasContext, points[j], "#00cd00");
+          } else {
+            drawCircle(canvasContext, points[j], "yellow");
+          }
+
+          if (document.getElementById("robotHitbox").checked) {
+            drawHitbox(
+              canvasContext,
+              distanceToFront,
+              distanceToBack,
+              distanceToSide,
+              points[j].coordinates[0],
+              points[j].coordinates[1],
+              angle
+            );
+          }
+        }
+      } else {
+        if (facing === "up") {
+          var angle = 0;
+        } else {
+          var angle = 90;
+        }
+        if (j < 1) {
+        } else {
+          var deltaX = points[j].coordinates[0] - points[j - 1].coordinates[0];
+          var deltaY = points[j].coordinates[1] - points[j - 1].coordinates[1];
+          var angle =
+            (Math.atan2(deltaY, deltaX) + Math.PI / 2) * (180 / Math.PI);
+          if (points[i].direction === "backwards") {
+            angle = angle + 180;
+          }
+        }
+
+        if (points[j].actionsYesOrNo === 1) {
+          drawCircle(canvasContext, points[j], "#00cd00");
+        } else {
+          drawCircle(canvasContext, points[j], "yellow");
+        }
+
+        if (document.getElementById("robotHitbox").checked) {
+          drawHitbox(
+            canvasContext,
+            distanceToFront,
+            distanceToBack,
+            distanceToSide,
+            points[j].coordinates[0],
+            points[j].coordinates[1],
+            angle
+          );
+        }
+      }
     }
   }
+}
+function drawHitbox(
+  canvasContext,
+  distanceToFront,
+  distanceToBack,
+  distanceToSide,
+  x,
+  y,
+  angle
+) {
+  var width = distanceToSide * 2;
+  var height = distanceToFront + distanceToBack;
+  canvasContext.save();
+
+  canvasContext.translate(x, y);
+  canvasContext.rotate((angle * Math.PI) / 180);
+  canvasContext.translate(-x, -y);
+  canvasContext.strokeRect(
+    x - width / 2,
+    y - height + distanceToBack,
+    width,
+    height
+  );
+
+  canvasContext.restore();
 }
 
 function drawLine(canvasContext, pointA, pointB) {
@@ -343,13 +716,27 @@ function addCoord(
     x = document.getElementById("x_coord").value;
     y = document.getElementById("y_coord").value;
     var shiftCheck = event.shiftKey;
-  }
-  if (shiftCheck === true) {
-    shift = 2;
-  } else if (shiftCheck === false) {
-    shift = undefined;
+    if (shiftCheck === true) {
+      shift = 2;
+    } else if (shiftCheck === false) {
+      shift = undefined;
+    } else {
+      shift = 1;
+    }
   } else {
-    shift = 1;
+    if (shift === 2) {
+      shiftCheck = true;
+    } else if (shift === undefined) {
+      shiftCheck = false;
+    }
+
+    if (shiftCheck === true) {
+      shift = 2;
+    } else if (shiftCheck === false) {
+      shift = undefined;
+    } else {
+      shift = 1;
+    }
   }
 
   if (x === "" || y === "") {
@@ -455,11 +842,12 @@ function advancedMode() {
 }
 
 function wallAlign(points) {
-  if (event.shiftKey) {
+  if (event.shiftKey === true) {
     shift = 2;
   } else {
     shift = undefined;
   }
+
   if (points.length < 1) {
     return;
   }
@@ -480,26 +868,26 @@ function wallAlign(points) {
   var xNew = 0 + useDistance;
   var yNew = yOld;
   var min = xOld;
-  var wall = 1;
 
   if (236 - xOld < min) {
     min = 236 - xOld;
-    wall = 3;
+
     xNew = 236 - useDistance;
     yNew = yOld;
   }
   if (yOld < min) {
     min = yOld;
-    wall = 4;
+
     xNew = xOld;
     yNew = 0 + useDistance;
   }
   if (114 - yOld < min) {
     min = 114 - yOld;
-    wall = 2;
+
     xNew = xOld;
     yNew = 114 - useDistance;
   }
+
   addCoord(undefined, xNew, yNew, shift, true);
 }
 
@@ -561,7 +949,11 @@ function lineSquaring(points) {
 
   var robotCoord1 = points[points.length - 1].coordinates;
   var robotCoord2 = points[points.length - 2].coordinates;
-
+  //------------------------------
+  if (points[points.length - 1].direction === "backwards") {
+    var robotCoord1 = points[points.length - 2].coordinates;
+    var robotCoord2 = points[points.length - 1].coordinates;
+  }
   if (
     Math.round(robotCoord1[0] / 3.386) === Math.round(robotCoord2[0] / 3.386) &&
     Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >
@@ -591,6 +983,7 @@ function lineSquaring(points) {
     );
   }
 
+  //-----------------------------
   var blackLineIntersections = [];
   var validIntersections = [];
 
@@ -758,6 +1151,7 @@ function lineSquaring(points) {
     1,
     true
   );
+  return lineSlope;
 }
 
 function calculateIntersectionWithCircle(circle, slope) {

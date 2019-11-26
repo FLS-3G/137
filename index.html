@@ -101,7 +101,7 @@
                    <button
                      id="add_point"
                      type="button"
-                     onclick="addCoord(event)"
+                     onclick="addCoord(event, undefined, undefined, undefined, false)"
                      disabled
                    >
                      Add
@@ -116,14 +116,20 @@
 
      <div  id="AdvMode">
       a:
-      <input type="number" id="textboxA" class="input_box" value= 0 >
+      <input type="number" id="textboxA" class="input_box" value= 35 >
       b:
       <input type="number" id="textboxB" class="input_box" value= 12>
       c:
       <input type="number" id="textboxC" class="input_box" value= 10>
+      d:
+      <input type="number" id="textboxD" class="input_box" value= 20>
+     
       <button id="alignButton" type="button" onclick="wallAlign(points)" >Wall Align</button>
       <button id="squaring" type="button" onclick="lineSquaring(points)">Line Squaring</button>
       <button id="generateADV" type="button" onclick="FUNKCIJA">Generate ADV</button>
+      Show Hitbox
+      <input type="checkbox"  id="robotHitbox" onclick="redraw(ctx, img, points)"/>
+      
      </div>
 
      <div style="display: flex;">
