@@ -18,8 +18,7 @@ var i = 1;
 var output = "";
 var img = new Image();
 
-img.src =
-  "https://raw.githubusercontent.com/html-ninjas/FLS/master/Mat2020.jpg";
+img.src = "https://raw.githubusercontent.com/FLS-3G/137/master/Mat2020.jpg";
 
 window.onload = function() {
   clearCanvas(ctx, img);

@@ -390,15 +390,20 @@ function vectorize(points) {
 
     deltaX = xNew2 - xNew1;
     deltaY = yNew2 - yNew1;
-    if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
-      console.log("straight");
-      var newVector = [deltaX, deltaY];
-    } else {
-      console.log("tilted");
-      var newVector = [deltaX, -1 * deltaY];
-    }
 
-    console.log(`deltaX ${deltaX} --- deltaY ${deltaY}`);
+    if (points[points.length - 1].direction === "forwards") {
+      if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+        var newVector = [deltaX, deltaY];
+      } else {
+        var newVector = [deltaX, -1 * deltaY];
+      }
+    } else if (points[points.length - 1].direction === "backwards") {
+      if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+        var newVector = [deltaX * -1, deltaY * -1];
+      } else {
+        var newVector = [deltaX * -1, deltaY];
+      }
+    }
 
     vectors.splice(indexes[k] - 1, 1, newVector);
   }
