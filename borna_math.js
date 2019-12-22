@@ -383,7 +383,6 @@ function vectorize(points) {
         var xNew2 = 0;
       }
     }
-    //here
 
     var yNew1 = xNew1 * oppositeSlope;
     var yNew2 = xNew2 * oppositeSlope;
@@ -397,7 +396,7 @@ function vectorize(points) {
       } else {
         var newVector = [deltaX, -1 * deltaY];
       }
-    } else if (points[points.length - 1].direction === "backwards") {
+    } else {
       if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
         var newVector = [deltaX * -1, deltaY * -1];
       } else {
