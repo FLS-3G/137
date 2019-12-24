@@ -1741,3 +1741,29 @@ Array.prototype.diff = function(a) {
     return a.indexOf(i) < 0;
   });
 };
+
+function funny(xStep, yStep) {
+  for (j = 0; j < 236; j = j + xStep) {
+    var x = j;
+    var i = 0;
+    console.log(`${Math.round((j / 236) * 100)}%`);
+
+    for (i = 0; i < 114; i = i + yStep) {
+      addCoord(undefined, x, i, undefined, true);
+      addCoord(undefined, NaN, NaN, undefined, true);
+    }
+  }
+}
+
+function zaWarudo() {
+  for (i = 1; i < points.length; i = i + 3) {
+    points.splice(i, 0, {
+      coordinates: [NaN, NaN],
+      direction: "forwards",
+      type: "waypoint",
+      actionsYesOrNo: 0,
+      speedOfLine: "30"
+    });
+    redraw(ctx, img, points);
+  }
+}

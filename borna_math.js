@@ -685,8 +685,12 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
     listOfSpeeds.push(listForGeneration[i].speedOfLine);
   }
 
+  //---------------------------------------------
+  if (listForGeneration[0].actionsYesOrNo === 1) {
+    textBox += action(++action_id);
+  }
   for (i = 1; i < listForGeneration.length; i++) {
-    if (listForGeneration[i].actionsYesOrNo !== 2) {
+    if (listForGeneration[i].direction !== "alignment") {
       textBox += movement(
         angles[i - 1],
         lengths[i - 1] / 3.386 / (wheelSize * Math.PI),
@@ -696,10 +700,14 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
         textBox += action(++action_id);
       }
     }
-    if (listForGeneration[i].actionsYesOrNo === 2) {
+    if (listForGeneration[i].direction === "alignment") {
       textBox += alignment(points[i - 1].speedOfLine);
+      if (listForGeneration[i].actionsYesOrNo === 1) {
+        textBox += action(++action_id);
+      }
     }
   }
+  //----------------------------------------------------
 
   textBox = textBox.replace(/NaN/g, "0");
 
