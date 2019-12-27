@@ -230,6 +230,9 @@ function vectorize(points) {
     }
 
     var directionalIntersections = [];
+    //here is thyne problem
+
+    //lmo
     for (i = 0; i < validIntersections.length; i++) {
       if (points[points.length - 1].direction === "backwards") {
         if (
@@ -390,17 +393,25 @@ function vectorize(points) {
     deltaX = xNew2 - xNew1;
     deltaY = yNew2 - yNew1;
 
-    if (points[points.length - 1].direction === "forwards") {
+    if (points.length > indexes[k] + 1) {
+      if (points[indexes[k] + 1].direction === "forwards") {
+        if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+          var newVector = [deltaX, deltaY];
+        } else {
+          var newVector = [deltaX, -1 * deltaY];
+        }
+      } else {
+        if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+          var newVector = [deltaX * -1, deltaY * -1];
+        } else {
+          var newVector = [deltaX * -1, deltaY];
+        }
+      }
+    } else {
       if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
         var newVector = [deltaX, deltaY];
       } else {
         var newVector = [deltaX, -1 * deltaY];
-      }
-    } else {
-      if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
-        var newVector = [deltaX * -1, deltaY * -1];
-      } else {
-        var newVector = [deltaX * -1, deltaY];
       }
     }
 
