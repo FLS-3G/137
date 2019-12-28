@@ -39,8 +39,6 @@ function addAction(points, redoList) {
   lastPoint.type = "action";
   redraw(ctx, img, points);
 
-  redoList = [];
-
   update(points, redoList);
 }
 
@@ -660,7 +658,15 @@ function onCanvasClick(event) {
     Math.round(x / 3.386),
     Math.round((y / 3.386) * -1 + 114.29)
   );
-  redoList = [];
+  if (redoList.length > 1) {
+    if (redoList[redoList.length - 1].type === "emptyAction") {
+      redoList.pop(redoList.length - 2);
+    }
+    redoList.pop(redoList.length - 1);
+  } else {
+    redoList = [];
+  }
+
   generateLists(points, speed);
   update(points, redoList);
 }
@@ -1025,6 +1031,12 @@ function update(points, redoList) {
   } else {
     document.getElementById("clearPath").removeAttribute("disabled");
   }
+
+  if (points.length === 0) {
+    document.getElementById("generateADV").setAttribute("disabled", "");
+  } else {
+    document.getElementById("generateADV").removeAttribute("disabled");
+  }
   if (points.length === 0) {
     document.getElementById("addAction").setAttribute("disabled", "");
   } else {
@@ -1178,7 +1190,14 @@ function addCoord(
     }
     addLiElement("orderedList", x, y);
     redraw(ctx, img, points);
-    redoList = [];
+    if (redoList.length > 1) {
+      if (redoList[redoList.length - 1].type === "emptyAction") {
+        redoList.pop(redoList.length - 2);
+      }
+      redoList.pop(redoList.length - 1);
+    } else {
+      redoList = [];
+    }
 
     document.querySelector("#x_coord").value = "";
     document.querySelector("#y_coord").value = "";
@@ -1766,4 +1785,8 @@ function zaWarudo() {
     });
     redraw(ctx, img, points);
   }
+}
+
+function rickRoll() {
+  window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 }
