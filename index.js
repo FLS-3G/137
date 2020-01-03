@@ -1008,7 +1008,10 @@ function update(points, redoList) {
       }
     }
 
-    if (directionalIntersections.length < 1) {
+    if (
+      directionalIntersections.length < 1 ||
+      distanceFormula[rememberI] < sensorDistance
+    ) {
       document.getElementById("squaring").setAttribute("disabled", "");
     } else {
       document.getElementById("squaring").removeAttribute("disabled");
@@ -1032,11 +1035,6 @@ function update(points, redoList) {
     document.getElementById("clearPath").removeAttribute("disabled");
   }
 
-  if (points.length === 0) {
-    document.getElementById("generateADV").setAttribute("disabled", "");
-  } else {
-    document.getElementById("generateADV").removeAttribute("disabled");
-  }
   if (points.length === 0) {
     document.getElementById("addAction").setAttribute("disabled", "");
   } else {
@@ -1790,3 +1788,8 @@ function zaWarudo() {
 function rickRoll() {
   window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 }
+
+
+
+ 
+                                        

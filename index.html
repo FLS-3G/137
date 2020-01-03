@@ -10,6 +10,7 @@
      rel="stylesheet"
    />
    <meta charset="UTF-8" />
+   <link rel="icon" href="https://github.com/FLS-3G/137/raw/master/tab_icon.jpg">
  </head>
  <body>
    <nav class="stroke">
@@ -224,7 +225,7 @@
        <div class="text_section">
          <h3 id="reqs">Requirements</h3><br>
          To use this program you will need:<br>
-         -<a class="text" href="https://github.com/FLS-3G/137/raw/master/FLS_MyBlock.zip" download>FLS MyBlock</a><br>
+         -<a class="text" href="https://github.com/FLS-3G/137/raw/master/MyBlock.zip" download>FLS MyBlock</a><br>
          -access to the internet and the FLS website (this one)<br>
        </div>
        <div class="text_section">
@@ -312,7 +313,7 @@
          <a class="text" onclick="scrollSmooth('speed_input')"
            >Speed</a
          >
-         aand the total length of the route. This does not include the 
+         and the total length of the route. This does not include the 
          duration of actions because you will be programming them by yourself.
          <h4 id="axle_length">Axle length</h4>
          Enter the distance (in cm) between the middle (halfway point between 
@@ -329,12 +330,45 @@
          on the right side of the coordinates of a point.
          <h4 id="generate">Generate</h4>
          Left-clicking on the "Generate" button will generate a text file used in the “FLS MyBlock”.<br />
+
+         </div>
+         <div class="text_section">
+         <h3 id="Advanced Mode">Advanced Mode</h3><br>
+         There are 3 main features in the advanced mode of FLS:
+         <h4 class="section-link" id="wallAlign">Wall Align</h4>
+         Wall Align is a button which when clicked will "align" the robot to the current closest wall.
+         You can align the front side of your robot to the wall by just clicking the button, or you can shift-click on the button and 
+         align the back side of your robot.<br><br>
+         To use this feature you will need to fill in the <a class="text" onclick="scrollSmooth('dtf')"
+         >DTF</a> and <a class="text" onclick="scrollSmooth('dtb')"
+         >DTB</a> boxes.
+         
+         <h4 class="section-link" id="lineSquaring">Line Squaring</h4>
+         When this button is clicked your robot will go forwards in the direction it is currently facing until it detects
+         a black line on which it will align itself to face perpendicular to it. For this your robot will need 2 color sensors.
+         <br><br>To use this feature you will need to fill in the <a class="text" onclick="scrollSmooth('dtcs')"
+         >DTCS</a> box.
+         <h4 class="section-link" id="showHitbox">Show Hitbox</h4>
+     Show Hitbox is a checkbox that will display the size and direction of your robot on the mat.
+<br><br> To use this feature you will need to fill in the <a class="text" onclick="scrollSmooth('dtf')"
+>DTF</a>, <a class="text" onclick="scrollSmooth('dtb')"
+>DTB</a> and <a class="text" onclick="scrollSmooth('dts')"
+>DTS</a> boxes.
+<h4 class="section-link" id="advancedInputs">Advanced Inputs</h4>
+There are 4 advanced inputs (in cm): <br><br>
+
+ <h4 class="section-link" id="dtf"> DTF - Distance To Front</h4>This is the distance from the center of rotation to the front wall of your robot.<br><br>
+ <h4 class="section-link" id="dtb"> DTB - Distance To Back</h4> This is the distance from the center of rotation to the back wall of your robot.<br><br>
+ <h4 class="section-link" id="dts">DTS - Distance To Side</h4> This is the distance from the center of rotation to the side wall of your robot.<br><br>
+ <h4 class="section-link" id="dtcs"> DTCS - Distance To Color Sensor</h4> This is the distance from the center of rotation to the point in the middle of the 2 color sensors.<br><br>
+
+       </div>
          <button onclick="window.scroll({
           top: 0, 
           left: 0, 
           behavior: 'smooth' 
          });">Back to top</button>
-       </div>
+       
      </div>
    </div>
    <script src="borna_math.js"></script>
