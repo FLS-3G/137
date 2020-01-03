@@ -15,7 +15,7 @@ body {
 }
 
 canvas {
-  margin-bottom: 32.5px;
+  margin-bottom: 16px;
 }
 li,
 a {
@@ -90,8 +90,8 @@ button {
   padding: 8px 24px;
   outline: none;
   margin-right: 18px;
-  margin-top: 32px;
-  margin-bottom: 32px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 button[disabled] {
   opacity: 0.25;
@@ -184,6 +184,13 @@ body {
   font-size: 15px;
   flex-direction: row;
   display: flex;
+  overflow: hidden;
+  align-items: center;
+}
+#AdvMode {
+  font-size: 15px;
+  flex-direction: row;
+  display: none;
   overflow: hidden;
   align-items: center;
 }

@@ -38,6 +38,386 @@ function vectorize(points) {
       points[i + 1].coordinates[1] - points[i].coordinates[1]
     ]);
   }
+  var indexes = [];
+  for (var i = 0; i < points.length; i++) {
+    if (points[i].direction === "alignment") {
+      indexes.push(i);
+    }
+  }
+
+  for (var k = 0; k < indexes.length; k++) {
+    var blackLines = [
+      {
+        number: 1,
+        function: [1000000, -63999947],
+        coordinates: [
+          [64, 53],
+          [64, 73]
+        ]
+      },
+      {
+        number: 2,
+        function: [0, 73],
+        coordinates: [
+          [64, 73],
+          [82, 73]
+        ]
+      },
+      {
+        number: 3,
+        function: [1000000, -81999927],
+        coordinates: [
+          [82, 73],
+          [82, 93]
+        ]
+      },
+      {
+        number: 4,
+        function: [-1.0385, 185.3462],
+        coordinates: [
+          [87, 95],
+          [113, 68]
+        ]
+      },
+      {
+        number: 5,
+        function: [1000000, -112999932],
+        coordinates: [
+          [113, 59],
+          [113, 68]
+        ]
+      },
+      {
+        number: 6,
+        function: [1.0667, -61.5333],
+        coordinates: [
+          [98, 43],
+          [113, 59]
+        ]
+      },
+      {
+        number: 7,
+        function: [0, 43],
+        coordinates: [
+          [80, 43],
+          [98, 43]
+        ]
+      },
+      {
+        number: 8,
+        function: [1.0833, -43.6667],
+        coordinates: [
+          [68, 30],
+          [80, 43]
+        ]
+      },
+      {
+        number: 9,
+        function: [0, 22],
+        coordinates: [
+          [92, 22],
+          [152, 22]
+        ]
+      },
+      {
+        number: 10,
+        function: [0, 19],
+        coordinates: [
+          [153, 19],
+          [168, 19]
+        ]
+      },
+      {
+        number: 11,
+        function: [0, 22],
+        coordinates: [
+          [169, 22],
+          [200, 22]
+        ]
+      },
+      {
+        number: 12,
+        function: [-1.8333, 337.6667],
+        coordinates: [
+          [146, 70],
+          [170, 26]
+        ]
+      },
+      {
+        number: 13,
+        function: [0.6176, -58.9118],
+        coordinates: [
+          [165, 43],
+          [199, 64]
+        ]
+      },
+      {
+        number: 14,
+        function: [1000000, -168999911],
+        coordinates: [
+          [169, 89],
+          [169, 114]
+        ]
+      }
+    ];
+
+    var sensorDistance = Number(document.getElementById("textboxC").value);
+
+    var robotCoord1 = points[indexes[k] - 1].coordinates;
+    var robotCoord2 = points[indexes[k] - 2].coordinates;
+
+    if (
+      Math.round(robotCoord1[0] / 3.386) ===
+        Math.round(robotCoord2[0] / 3.386) &&
+      Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >
+        Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+    ) {
+      var robotSlope = [
+        1000000,
+        -1000000 * Math.round(robotCoord1[0] / 3.386) +
+          Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+      ];
+    } else if (
+      Math.round(robotCoord1[0] / 3.386) ===
+        Math.round(robotCoord2[0] / 3.386) &&
+      Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) <
+        Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+    ) {
+      var robotSlope = [
+        -1000000,
+        1000000 * Math.round(robotCoord1[0] / 3.386) +
+          Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+      ];
+    } else {
+      var robotSlope = calculateSlope(
+        Math.round(robotCoord1[0] / 3.386),
+        Math.round(robotCoord2[0] / 3.386),
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29),
+        Math.round((robotCoord2[1] / 3.386) * -1 + 114.29)
+      );
+    }
+
+    var blackLineIntersections = [];
+    var validIntersections = [];
+    for (i = 0; i < 14; i++) {
+      blackLineIntersections.push(
+        calculateIntersection(robotSlope, blackLines[i].function)
+      );
+    }
+    for (i = 0; i < 14; i++) {
+      if (blackLines[i].function[0] === 1000000) {
+        if (
+          blackLineIntersections[i][1] > blackLines[i].coordinates[0][1] &&
+          blackLineIntersections[i][1] < blackLines[i].coordinates[1][1]
+        ) {
+          validIntersections.push(blackLines[i]);
+        }
+      } else {
+        if (
+          blackLineIntersections[i][0] > blackLines[i].coordinates[0][0] &&
+          blackLineIntersections[i][0] < blackLines[i].coordinates[1][0]
+        ) {
+          validIntersections.push(blackLines[i]);
+        }
+      }
+    }
+
+    var validIntersectionCoordinates = [];
+    for (i = 0; i < validIntersections.length; i++) {
+      validIntersectionCoordinates.push(
+        calculateIntersection(robotSlope, validIntersections[i].function)
+      );
+    }
+
+    var directionalIntersections = [];
+    //here is thyne problem
+
+    //lmo
+    for (i = 0; i < validIntersections.length; i++) {
+      if (points[points.length - 1].direction === "backwards") {
+        if (
+          Math.round(robotCoord1[0] / 3.386) ===
+          Math.round(robotCoord2[0] / 3.386)
+        ) {
+          if (
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >=
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29) &&
+            validIntersectionCoordinates[i][1] >=
+              Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          } else if (
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) <=
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29) &&
+            validIntersectionCoordinates[i][1] <=
+              Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          }
+        } else {
+          if (
+            Math.round(robotCoord1[0] / 3.386) >=
+              Math.round(robotCoord2[0] / 3.386) &&
+            validIntersectionCoordinates[i][0] >=
+              Math.round(robotCoord1[0] / 3.386)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          } else if (
+            Math.round(robotCoord1[0] / 3.386) <=
+              Math.round(robotCoord2[0] / 3.386) &&
+            validIntersectionCoordinates[i][0] <=
+              Math.round(robotCoord1[0] / 3.386)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          }
+        }
+      } else {
+        if (
+          Math.round(robotCoord2[0] / 3.386) ===
+          Math.round(robotCoord1[0] / 3.386)
+        ) {
+          if (
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >=
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29) &&
+            validIntersectionCoordinates[i][1] >=
+              Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          } else if (
+            Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) <=
+              Math.round((robotCoord2[1] / 3.386) * -1 + 114.29) &&
+            validIntersectionCoordinates[i][1] <=
+              Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          }
+        } else {
+          if (
+            Math.round(robotCoord1[0] / 3.386) >=
+              Math.round(robotCoord2[0] / 3.386) &&
+            validIntersectionCoordinates[i][0] >=
+              Math.round(robotCoord1[0] / 3.386)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          } else if (
+            Math.round(robotCoord1[0] / 3.386) <=
+              Math.round(robotCoord2[0] / 3.386) &&
+            validIntersectionCoordinates[i][0] <=
+              Math.round(robotCoord1[0] / 3.386)
+          ) {
+            directionalIntersections.push(validIntersections[i]);
+          }
+        }
+      }
+    }
+    if (points[indexes[k] - 1].direction === "backwards") {
+      var directionalIntersections = validIntersections.diff(
+        directionalIntersections
+      );
+    }
+    var directionalIntersectionsCoordinates = [];
+    for (i = 0; i < directionalIntersections.length; i++) {
+      directionalIntersectionsCoordinates.push(
+        calculateIntersection(robotSlope, directionalIntersections[i].function)
+      );
+    }
+    var distanceFormula = [];
+    var smallestDistance = 1000000;
+    var rememberI = 0;
+    for (i = 0; i < directionalIntersectionsCoordinates.length; i++) {
+      distanceFormula.push(
+        Math.sqrt(
+          (directionalIntersectionsCoordinates[i][0] -
+            Math.round(robotCoord1[0] / 3.386)) **
+            2 +
+            (directionalIntersectionsCoordinates[i][1] -
+              Math.round((robotCoord1[1] / 3.386) * -1 + 114.29)) **
+              2
+        )
+      );
+      if (
+        distanceFormula[i] < smallestDistance &&
+        distanceFormula[i] > sensorDistance
+      ) {
+        rememberI = i;
+        smallestDistance = distanceFormula[i];
+      }
+    }
+    if (directionalIntersections.length < 1) {
+      var lineSlope = [];
+    } else {
+      var lineSlope = directionalIntersections[rememberI].function;
+    }
+    if (points) var oppositeSlope = 0;
+    if (
+      lineSlope[0] === 0 &&
+      directionalIntersections[rememberI].coordinates[0][1] < robotCoord1[1]
+    ) {
+      oppositeSlope = 1000000;
+    } else if (
+      lineSlope[0] === 0 &&
+      directionalIntersections[rememberI].coordinates[0][1] > robotCoord1[1]
+    ) {
+      oppositeSlope = -1000000;
+    } else {
+      oppositeSlope = -1 / lineSlope[0];
+    }
+
+    if (lineSlope[0] < 0) {
+      if (
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) <
+        lineSlope[0] * Math.round(robotCoord1[0] / 3.386) + lineSlope[1]
+      ) {
+        var xNew1 = 1;
+        var xNew2 = 0;
+      } else {
+        var xNew1 = -1;
+        var xNew2 = 0;
+      }
+    } else {
+      if (
+        Math.round((robotCoord1[1] / 3.386) * -1 + 114.29) >
+        lineSlope[0] * Math.round(robotCoord1[0] / 3.386) + lineSlope[1]
+      ) {
+        var xNew1 = 1;
+        var xNew2 = 0;
+      } else {
+        var xNew1 = -1;
+        var xNew2 = 0;
+      }
+    }
+
+    var yNew1 = xNew1 * oppositeSlope;
+    var yNew2 = xNew2 * oppositeSlope;
+
+    deltaX = xNew2 - xNew1;
+    deltaY = yNew2 - yNew1;
+
+    if (points.length > indexes[k] + 1) {
+      if (points[indexes[k] + 1].direction === "forwards") {
+        if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+          var newVector = [deltaX, deltaY];
+        } else {
+          var newVector = [deltaX, -1 * deltaY];
+        }
+      } else {
+        if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+          var newVector = [deltaX * -1, deltaY * -1];
+        } else {
+          var newVector = [deltaX * -1, deltaY];
+        }
+      }
+    } else {
+      if (lineSlope[0] === 1000000 || lineSlope[0] === 0) {
+        var newVector = [deltaX, deltaY];
+      } else {
+        var newVector = [deltaX, -1 * deltaY];
+      }
+    }
+
+    vectors.splice(indexes[k] - 1, 1, newVector);
+  }
+
   return vectors;
 }
 
@@ -73,8 +453,7 @@ function calculateInitialAngle(points, facing) {
         }
       }
     }
-    console.log((start * 180) / Math.PI) * -1;
-    console.log(facing);
+
     return ((start * 180) / Math.PI) * -1;
   } else if (checkForDirection === "backwards") {
     if (facing === "right") {
@@ -120,7 +499,7 @@ function calculateInitialAngle(points, facing) {
         }
       }
     }
-    console.log((start * 180) / Math.PI);
+
     return ((start * 180) / Math.PI) * -1;
   }
   console.warn("Invalid checkForDirection yo! Pls fix! ");
@@ -280,11 +659,22 @@ function movement(angle, distance, speed) {
   return `2${ln}${angle}${ln}${distance}${ln}${speed}${ln}`;
 }
 
+function alignment(speed) {
+  return `4${ln}${speed}${ln}`;
+}
+
 function makeTextBox(points, wheelSize, angles, speedOfLine) {
   var axleLength = document.getElementById("axleLength").value;
+  var numberOfMovements = 1;
+  var listForGeneration = points;
 
   if (points.length > 0) {
-    var numberOfMovements = points.length - 1;
+    numberOfMovements = points.length - 1;
+    for (i = 0; i < points.length; i++) {
+      if (points[i].actionsYesOrNo === 1) {
+        numberOfMovements = numberOfMovements + 1;
+      }
+    }
   } else {
     var numberOfMovements = 0;
   }
@@ -300,22 +690,35 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
   textBox += ln;
 
   let action_id = 0;
+  var counter = 0;
+  var listOfSpeeds = [];
+  for (i = 0; i < listForGeneration.length - 1; i++) {
+    listOfSpeeds.push(listForGeneration[i].speedOfLine);
+  }
 
-  points.forEach((point, index) => {
-    if (point.actionsYesOrNo === 1) {
-      // add 3
-      textBox += action(++action_id);
-    }
-
-    if (index !== points.length - 1) {
-      // 2
+  //---------------------------------------------
+  if (listForGeneration[0].actionsYesOrNo === 1) {
+    textBox += action(++action_id);
+  }
+  for (i = 1; i < listForGeneration.length; i++) {
+    if (listForGeneration[i].direction !== "alignment") {
       textBox += movement(
-        angles[index],
-        lengths[index] / 3.386 / (wheelSize * Math.PI),
-        point.speedOfLine
+        angles[i - 1],
+        lengths[i - 1] / 3.386 / (wheelSize * Math.PI),
+        points[i - 1].speedOfLine
       );
+      if (listForGeneration[i].actionsYesOrNo === 1) {
+        textBox += action(++action_id);
+      }
     }
-  });
+    if (listForGeneration[i].direction === "alignment") {
+      textBox += alignment(points[i - 1].speedOfLine);
+      if (listForGeneration[i].actionsYesOrNo === 1) {
+        textBox += action(++action_id);
+      }
+    }
+  }
+  //----------------------------------------------------
 
   textBox = textBox.replace(/NaN/g, "0");
 
