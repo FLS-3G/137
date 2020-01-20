@@ -124,6 +124,9 @@
       <input type="number" id="textboxD" class="input_box" value= 7.6>
       DTCS:
       <input type="number" id="textboxC" class="input_box" value= 11.2>
+     
+       
+      
       
      
       <button id="alignButton" type="button" onclick="wallAlign(points)" >Wall Align</button>
@@ -131,7 +134,10 @@
       
       Show Hitbox
       <input type="checkbox"  id="robotHitbox" onclick="redraw(ctx, img, points)"/>
-      
+      <form id='importPfForm'>
+        <input type='file' name='datafile' size='20'>
+        <input type='button' value='IMPORT' onclick='importPortfolioFunction()'/>
+        </form>
      </div>
 
      <div style="display: flex;">

@@ -719,6 +719,7 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
     }
   }
   //----------------------------------------------------
+  textBox += JSON.stringify(points);
 
   textBox = textBox.replace(/NaN/g, "0");
 
