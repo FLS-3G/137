@@ -6,12 +6,13 @@ function clearCanvas(canvasContext, img) {
 }
 
 //----------------------------
-function addActionWhileMoving (point,redoList){
-  points[points.length - 2].actionsYesOrNo =points[points.length - 2].actionsYesOrNo + 2;
+function addActionWhileMoving(point, redoList) {
+  points[points.length - 2].actionsYesOrNo =
+    points[points.length - 2].actionsYesOrNo + 2;
   var lastPoint = points[points.length - 2];
   lastPoint.type = "actionWhilleMoving";
   redraw(ctx, img, points);
-  update(points,redoList);
+  update(points, redoList);
 }
 //----------------------------
 function importPortfolioFunction() {
@@ -47,7 +48,7 @@ function addAction(points, redoList) {
   liInUl.setAttribute("class", "liInUl");
   liInUl.appendChild(textInLiInUl);
   UlSelect.appendChild(liInUl);
-  points[points.length - 1].actionsYesOrNo =1;
+  points[points.length - 1].actionsYesOrNo = 1;
   var lastPoint = points[points.length - 1];
   lastPoint.type = "action";
   redraw(ctx, img, points);
@@ -596,20 +597,28 @@ function drawHitbox(
 }
 
 function drawLine(canvasContext, pointA, pointB) {
-  if (pointB.direction === "forwards" && pointA.actionsYesOrNo === 0 || pointB.direction === "forwards" && pointA.actionsYesOrNo === 1) {
+  if (
+    (pointB.direction === "forwards" && pointA.actionsYesOrNo === 0) ||
+    (pointB.direction === "forwards" && pointA.actionsYesOrNo === 1)
+  ) {
     colorLine(canvasContext, pointA, pointB, "#831100", 7);
     colorLine(canvasContext, pointA, pointB, "#FF2600", 3);
   } else if (pointB.direction === "alignment" && pointA.actionsYesOrNo !== 2) {
     colorLine(canvasContext, pointA, pointB, "#188B08", 7);
     colorLine(canvasContext, pointA, pointB, "#00cd00", 3);
-  }else if(pointB.direction === "forwards" && (pointA.actionsYesOrNo === 2 || pointA.actionsYesOrNo === 3)){
+  } else if (
+    pointB.direction === "forwards" &&
+    (pointA.actionsYesOrNo === 2 || pointA.actionsYesOrNo === 3)
+  ) {
     colorLine(canvasContext, pointA, pointB, "#831100", 7);
-    colorLine(canvasContext, pointA, pointB, "#FFFFFF", 3);}
-    else if(pointB.direction === "backwards" && (pointA.actionsYesOrNo === 2 || pointA.actionsYesOrNo === 3)){
-      colorLine(canvasContext, pointA, pointB, "#002E7A", 7);
-      colorLine(canvasContext, pointA, pointB, "#FFFFFF", 3);
-  }
-   else {
+    colorLine(canvasContext, pointA, pointB, "Yellow", 3);
+  } else if (
+    pointB.direction === "backwards" &&
+    (pointA.actionsYesOrNo === 2 || pointA.actionsYesOrNo === 3)
+  ) {
+    colorLine(canvasContext, pointA, pointB, "#002E7A", 7);
+    colorLine(canvasContext, pointA, pointB, "Yellow", 3);
+  } else {
     colorLine(canvasContext, pointA, pointB, "#002E7A", 7);
     colorLine(canvasContext, pointA, pointB, "#0433FF", 3);
   }
@@ -700,16 +709,13 @@ function undoButton(ctx, img, points, redoActionList) {
   if (point.actionsYesOrNo === 1) {
     redoList.push({ type: "emptyAction" });
     points[points.length - 1].actionsYesOrNo = 0;
-
-  } else if(points.length > 1 && pastPoint.actionsYesOrNo === 2){
+  } else if (points.length > 1 && pastPoint.actionsYesOrNo === 2) {
     redoList.push({ type: "emptyActionWhileMoving" });
     points[points.length - 2].actionsYesOrNo = 0;
-  }
-  else if (points.length > 1 && pastPoint.actionsYesOrNo === 3){
+  } else if (points.length > 1 && pastPoint.actionsYesOrNo === 3) {
     redoList.push({ type: "emptyActionWhileMoving" });
     points[points.length - 2].actionsYesOrNo = 1;
-  }
-  else {
+  } else {
     var redoElement = points.pop();
     redoList.push(redoElement);
     liToKill.parentNode.removeChild(liToKill);
@@ -1037,7 +1043,8 @@ function update(points, redoList) {
 
     if (
       directionalIntersections.length < 1 ||
-      distanceFormula[rememberI] < sensorDistance || points[points.length - 1].direction=== "alignment"
+      distanceFormula[rememberI] < sensorDistance ||
+      points[points.length - 1].direction === "alignment"
     ) {
       document.getElementById("squaring").setAttribute("disabled", "");
     } else {
@@ -1073,7 +1080,7 @@ function update(points, redoList) {
     document.getElementById("redo").removeAttribute("disabled");
   }
   if (
-    (points.length > 0 && points[points.length - 1].actionsYesOrNo%2 === 1) ||
+    (points.length > 0 && points[points.length - 1].actionsYesOrNo % 2 === 1) ||
     points.length === 0
   ) {
     document.getElementById("addAction").setAttribute("disabled", "");
@@ -1081,12 +1088,16 @@ function update(points, redoList) {
     document.getElementById("addAction").removeAttribute("disabled");
   }
   //---------------------------------
- 
+
   if (
-    (points.length > 1 && points[points.length - 2].actionsYesOrNo === 2 || points.length > 1 && points[points.length - 2].actionsYesOrNo === 3) ||
-    points.length < 2 || points[points.length - 1].direction=== "alignment"
+    (points.length > 1 && points[points.length - 2].actionsYesOrNo === 2) ||
+    (points.length > 1 && points[points.length - 2].actionsYesOrNo === 3) ||
+    points.length < 2 ||
+    points[points.length - 1].direction === "alignment"
   ) {
-    document.getElementById("addActionWhileMoving").setAttribute("disabled", "");
+    document
+      .getElementById("addActionWhileMoving")
+      .setAttribute("disabled", "");
   } else {
     document.getElementById("addActionWhileMoving").removeAttribute("disabled");
   }
@@ -1151,8 +1162,7 @@ function redoButton(redoList, points) {
     liInUl.setAttribute("class", "liInUl");
     liInUl.appendChild(textInLiInUl);
     UlSelect.appendChild(liInUl);
-  }
-  else if (current.type === "emptyActionWhileMoving") {
+  } else if (current.type === "emptyActionWhileMoving") {
     points[points.length - 2].actionsYesOrNo += 2;
     var orderedListSelect = document.querySelector("ol");
     var lastLiSelect =
@@ -1160,8 +1170,7 @@ function redoButton(redoList, points) {
     var UlSelect = lastLiSelect.querySelector("ul");
     var liInUl = document.createElement("li");
     liInUl.setAttribute("class", "liInUl");
-  }
-   else {
+  } else {
     points.push(current);
     addLiElement(
       "orderedList",
