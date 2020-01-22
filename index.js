@@ -19,13 +19,25 @@ function onChange(event) {
   var file = event.target.files[0];
   var reader = new FileReader();
   reader.onload = function(e) {
-    console.log(e.target.result);
+    var rtf = "";
+    var rtf = JSON.stringify(e.target.result);
+    var lastLine = getLastLineBreak(rtf,"^");
+    var endLine = getLastLineBreak (rtf,"]");
+    endLine = endLine - lastLine;
+    rtf = rtf.substr(lastLine,endLine);
+    console.log(endLine);
+    console.log(rtf);
   };
 
   reader.readAsText(file);
-  var lastLine = rtf.substr(rtf.lastIndexOf("\n")+1);
-  console.log(lastLine);
 }
+function getLastLineBreak (content,text) {
+  var reversed = content.split("").reverse().join("");
+  var index = content.length-reversed.indexOf(text);
+  
+  return index
+}
+
 
 var facing = "up";
 var axleLength = document.getElementById("axleLength").value;
