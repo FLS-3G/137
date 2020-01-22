@@ -48,7 +48,8 @@
          </p>
          
          <button class="button" onclick="startingUp()">Facing up</button>
-         <button class="button" onclick="startingRight()">Facing right</button>
+         <button class="button" onclick="startingRight()">Facing right </button>
+        <button calss="button" > <input type="file" name='datafile'></button>
        </div>
      </div>
      <div class="order_information">
@@ -131,13 +132,11 @@
      
       <button id="alignButton" type="button" onclick="wallAlign(points)" >Wall Align</button>
       <button id="squaring" type="button" onclick="lineSquaring(points)">Line Squaring</button>
+      <button id="addActionWhileMoving" type="button" onclick="addActionWhileMoving(points,redoList)">Add action while moving</button>
       
       Show Hitbox
       <input type="checkbox"  id="robotHitbox" onclick="redraw(ctx, img, points)"/>
-      <form id='importPfForm'>
-        <input type='file' name='datafile' size='20'>
-        <input type='button' value='IMPORT' onclick='importPortfolioFunction()'/>
-        </form>
+      
      </div>
 
      <div style="display: flex;">

@@ -107,7 +107,7 @@ button[disabled] {
 }
 .modal {
   display: block;
-  height: 200px;
+  height: 250px;
   width: 400px;
   background-color: #ffffff;
   color: #000000;

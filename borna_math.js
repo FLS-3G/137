@@ -651,6 +651,9 @@ function generateEstimate() {
 
 const ln = String.fromCharCode(13);
 
+function actionWhileMoving(id){
+  return `5${ln}${id}${ln}`
+}
 function action(id) {
   return `3${ln}${id}${ln}`;
 }
@@ -690,6 +693,7 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
   textBox += ln;
 
   let action_id = 0;
+  let actionWhileMoving_id = 0;
   var counter = 0;
   var listOfSpeeds = [];
   for (i = 0; i < listForGeneration.length - 1; i++) {
@@ -697,17 +701,20 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
   }
 
   //---------------------------------------------
-  if (listForGeneration[0].actionsYesOrNo === 1) {
+  if (listForGeneration[0].actionsYesOrNo === 1 || listForGeneration[0].actionsYesOrNo === 3) {
     textBox += action(++action_id);
   }
   for (i = 1; i < listForGeneration.length; i++) {
+    if (listForGeneration[i-1].actionsYesOrNo === 2 || listForGeneration[i-1].actionsYesOrNo === 3) {
+      textBox += actionWhileMoving(++actionWhileMoving_id);
+    }
     if (listForGeneration[i].direction !== "alignment") {
       textBox += movement(
         angles[i - 1],
         lengths[i - 1] / 3.386 / (wheelSize * Math.PI),
         points[i - 1].speedOfLine
       );
-      if (listForGeneration[i].actionsYesOrNo === 1) {
+      if (listForGeneration[i].actionsYesOrNo === 1 || listForGeneration[i].actionsYesOrNo === 3) {
         textBox += action(++action_id);
       }
     }
