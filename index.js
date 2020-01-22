@@ -5,7 +5,7 @@ function clearCanvas(canvasContext, img) {
   canvasContext.globalAlpha = 1;
 }
 
-//----------------------------
+
 function addActionWhileMoving(point, redoList) {
   points[points.length - 2].actionsYesOrNo =
     points[points.length - 2].actionsYesOrNo + 2;
@@ -14,9 +14,17 @@ function addActionWhileMoving(point, redoList) {
   redraw(ctx, img, points);
   update(points, redoList);
 }
-//----------------------------
-function importPortfolioFunction() {
-  var f = document.getElementById("importPfForm");
+
+function onChange(event) {
+  var file = event.target.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    console.log(e.target.result);
+  };
+
+  reader.readAsText(file);
+  var lastLine = rtf.substr(rtf.lastIndexOf("\n")+1);
+  console.log(lastLine);
 }
 
 var facing = "up";
@@ -1139,13 +1147,11 @@ function startingUp() {
   closeStartingModal();
   clearPath(ctx, img);
   facing = "up";
-  importPortfolioFunction();
 }
 function startingRight() {
   closeStartingModal();
   clearPath(ctx, img);
   facing = "right";
-  importPortfolioFunction();
 }
 
 function redoButton(redoList, points) {
