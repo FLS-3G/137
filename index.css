@@ -408,3 +408,19 @@ th {
   width: 100%;
   table-layout: auto;
 }
+
+
+.customFileButton {
+  content: 'Load';
+  border-radius: 4px;
+  border: solid 1px #000000;
+  font-size: 15px;
+  background-color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  padding: 8px 24px;
+  outline: none;
+  margin-right: 18px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
