@@ -1,6 +1,9 @@
 var points = [];
 var load = 0;
 var scroll = 0;
+function loadEnable (){
+  load = 1;
+}
 window.addEventListener('scroll', function() {
   scroll = window.scrollY;
     })
@@ -94,6 +97,7 @@ if(rtf.charAt(i) == "s"){
         addActionWhileMoving(points,redoList);
       }
     }
+    load = 0;
   };
 
   reader.readAsText(file);
@@ -1150,10 +1154,11 @@ function update(points, redoList) {
     document.getElementById("Undo").removeAttribute("disabled");
   }
   if (points.length !== 0) {
-    document.getElementById("Load").setAttribute("disabled", "");
+    document.getElementById("loadFake").setAttribute("disabled", "");
   } else {
-    document.getElementById("Load").removeAttribute("disabled");
+    document.getElementById("loadFake").removeAttribute("disabled");
   }
+  
   if (points.length === 0) {
     document.getElementById("clearPath").setAttribute("disabled", "");
   } else {
