@@ -728,7 +728,31 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
   }
   //----------------------------------------------------
   textBox +="^"
-  textBox += JSON.stringify(points);
+  for(var i = 0; i<points.length;i++){
+    textBox +="x";
+    textBox +=Math.round((points[i].coordinates[0]/ 3.386)*10)/10;
+    textBox +="y";
+    textBox +=Math.round(((points[i].coordinates[1] / 3.386) * -1 + 114.29)*10)/10;
+    textBox +="d";
+    var direction = points[i].direction;
+    if(direction == "forwards"){
+      direction = 0;
+    }
+    else if (direction == "backwards")
+    {
+      direction = 2;
+    }
+    else{
+      direction = 1;
+    }
+    textBox +=direction;
+    textBox +="a";
+    textBox +=points[i].actionsYesOrNo;
+    textBox +="s";
+    textBox +=points[i].speedOfLine;
+  }
+  textBox +="x";
+  textBox +="]";
 
 
   textBox = textBox.replace(/NaN/g, "0");

@@ -1,5 +1,5 @@
 var points = [];
-var load;
+var load = 0;
 function clearCanvas(canvasContext, img) {
   canvasContext.clearRect(0, 0, 800, 400);
   canvasContext.globalAlpha = 0.8;
@@ -25,12 +25,72 @@ function onChange(event) {
     var rtf = e.target.result;
     var lastLine = getLastLineBreak(rtf,"^");
     var endLine = getLastLineBreak (rtf,"]");
-    endLine = endLine - lastLine;
+    endLine = endLine - lastLine - 1;
     rtf = rtf.substr(lastLine,endLine);
-    points = (JSON.parse(rtf));
-    addSpeedToList(points);
-    load = 1;
-    return points;
+    var x = [];
+    var y = [];
+    var d = [];
+    var a = [];
+    var s = [];
+    var first = 0;
+    var long = 0;
+    var realX = [];
+    var realY = [];
+    var realD = [];
+    var realA = [];
+    var realS = [];
+    for(var i = 0;i<endLine;i++){
+      if(rtf.charAt(i) == "x"){
+        x.push(i);
+     }
+     if(rtf.charAt(i) == "y"){
+      y.push(i);
+   }
+   if(rtf.charAt(i) == "d"){
+    d.push(i);
+ }
+ if(rtf.charAt(i) == "a"){
+  a.push(i);
+}
+if(rtf.charAt(i) == "s"){
+  s.push(i);
+}
+    }
+    for (i=0;i<y.length;i++){
+      long = y[i] - x[i] - 1;
+      first = x[i]+1;
+      realX.push(rtf.substr(first,long));
+      long = d[i] - y[i] - 1;
+      first = y[i]+1;
+      realY.push(rtf.substr(first,long));
+      long = a[i] - d[i] - 1;
+      first = d[i]+1;
+      realD.push(rtf.substr(first,long));
+      long = s[i] - a[i] - 1;
+      first = a[i]+1;
+      realA.push(rtf.substr(first,long));
+      long = x[i+1] - s[i] - 1;
+      first = s[i]+1;
+      realS.push(rtf.substr(first,long));
+    }
+    for(i=0;i<realD.length;i++){
+      if (realD[i] == 0){
+        realD[i] = undefined;
+      }
+      if (realD[i] == 2){
+        realD[i] = 2;
+      }
+      console.log(realD[i]);
+      addCoord(undefined,realX[i],realY[i],realD[i],true);
+      points[i].speedOfLine = realS[i];
+      if (realA[i] == 1 || realA[i] == 3){
+        addAction(points,redoList);
+      }
+      if(i > 0 && (realA[i-1] == 2 || realA[i-1] == 3)){
+        addActionWhileMoving(points,redoList);
+      }
+    }
+    console.log(rtf);
   };
 
   reader.readAsText(file);
@@ -97,7 +157,6 @@ function addSpeedToList(points) {
       listOfPoints[i].firstChild.innerText = `${text} ${currentSpeed}`;
     }
   }}
-  else{console.log("radi")}
 }
 
 function addLiElement(listId, x, y) {
@@ -500,7 +559,7 @@ function drawPoints(canvasContext, points) {
             angle = angle + 180;
           }
 
-          if (points[j].actionsYesOrNo === 1) {
+          if (points[j].actionsYesOrNo === 1 || points[j].actionsYesOrNo === 3) {
             drawCircle(canvasContext, points[j], "#00cd00");
           } else {
             drawCircle(canvasContext, points[j], "yellow");
@@ -536,7 +595,7 @@ function drawPoints(canvasContext, points) {
             }
           }
 
-          if (points[j].actionsYesOrNo === 1) {
+          if (points[j].actionsYesOrNo === 1 || points[j].actionsYesOrNo === 3) {
             drawCircle(canvasContext, points[j], "#00cd00");
           } else {
             drawCircle(canvasContext, points[j], "yellow");
@@ -709,8 +768,8 @@ function onCanvasClick(event) {
   redraw(ctx, img, points);
   addLiElement(
     "orderedList",
-    Math.round(x / 3.386),
-    Math.round((y / 3.386) * -1 + 114.29)
+    Math.round((x / 3.386)*10)/10,
+    Math.round(((y / 3.386) * -1 + 114.29)*10)/10
   );
   if (redoList.length > 1) {
     if (redoList[redoList.length - 1].type === "emptyAction") {
@@ -1087,6 +1146,11 @@ function update(points, redoList) {
   } else {
     document.getElementById("Undo").removeAttribute("disabled");
   }
+  if (points.length !== 0) {
+    document.getElementById("Load").setAttribute("disabled", "");
+  } else {
+    document.getElementById("Load").removeAttribute("disabled");
+  }
   if (points.length === 0) {
     document.getElementById("clearPath").setAttribute("disabled", "");
   } else {
@@ -1196,8 +1260,8 @@ function redoButton(redoList, points) {
     points.push(current);
     addLiElement(
       "orderedList",
-      Math.round(current.coordinates[0] / 3.386),
-      Math.round((current.coordinates[1] / 3.386) * -1 + 114.29)
+      Math.round((current.coordinates[0] / 3.386)*10)/10,
+      Math.round(((current.coordinates[1] / 3.386) * -1 + 114.29)*10)/10
     );
   }
 
