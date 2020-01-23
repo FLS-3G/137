@@ -6,7 +6,7 @@ body {
 }
 
 .modal-no-scroll {
-  scroll-padding-top: -100;
+  height: 100vh;
   overflow-y: hidden;
 }
 

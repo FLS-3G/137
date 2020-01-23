@@ -1385,7 +1385,11 @@ function coordCheck() {
     }
   }
 }
-
+function scrollToTopFunction (){
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })}
 function scrollSmooth(id, type = "#") {
   const section = document.querySelector(`${type}${id}`);
   section.scrollIntoView({ behavior: "smooth" });
