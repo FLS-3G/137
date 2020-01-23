@@ -1,5 +1,10 @@
 var points = [];
 var load = 0;
+var scroll = 0;
+window.addEventListener('scroll', function() {
+  scroll = window.scrollY;
+    })
+
 function clearCanvas(canvasContext, img) {
   canvasContext.clearRect(0, 0, 800, 400);
   canvasContext.globalAlpha = 0.8;
@@ -80,7 +85,6 @@ if(rtf.charAt(i) == "s"){
       if (realD[i] == 2){
         realD[i] = 2;
       }
-      console.log(realD[i]);
       addCoord(undefined,realX[i],realY[i],realD[i],true);
       points[i].speedOfLine = realS[i];
       if (realA[i] == 1 || realA[i] == 3){
@@ -90,7 +94,6 @@ if(rtf.charAt(i) == "s"){
         addActionWhileMoving(points,redoList);
       }
     }
-    console.log(rtf);
   };
 
   reader.readAsText(file);
@@ -743,7 +746,7 @@ function onCanvasClick(event) {
   var y = event.y;
 
   x -= canvasDivisor.offsetLeft + 64 + 1.5;
-  y -= canvasDivisor.offsetTop + 85 + 16 - 3;
+  y -= canvasDivisor.offsetTop + 85 + 16 - 3 - scroll;
 
   var speed = document.getElementById("speed").value;
 
