@@ -6,7 +6,7 @@ body {
 }
 
 .modal-no-scroll {
-  height: 100vh;
+  scroll-padding-top: -100;
   overflow-y: hidden;
 }
 
@@ -107,7 +107,7 @@ button[disabled] {
 }
 .modal {
   display: block;
-  height: 250px;
+  height: 200px;
   width: 400px;
   background-color: #ffffff;
   color: #000000;

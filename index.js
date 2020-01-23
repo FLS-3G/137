@@ -1,3 +1,5 @@
+var points = [];
+var load;
 function clearCanvas(canvasContext, img) {
   canvasContext.clearRect(0, 0, 800, 400);
   canvasContext.globalAlpha = 0.8;
@@ -20,13 +22,15 @@ function onChange(event) {
   var reader = new FileReader();
   reader.onload = function(e) {
     var rtf = "";
-    var rtf = JSON.stringify(e.target.result);
+    var rtf = e.target.result;
     var lastLine = getLastLineBreak(rtf,"^");
     var endLine = getLastLineBreak (rtf,"]");
     endLine = endLine - lastLine;
     rtf = rtf.substr(lastLine,endLine);
-    console.log(endLine);
-    console.log(rtf);
+    points = (JSON.parse(rtf));
+    addSpeedToList(points);
+    load = 1;
+    return points;
   };
 
   reader.readAsText(file);
@@ -43,7 +47,6 @@ var facing = "up";
 var axleLength = document.getElementById("axleLength").value;
 var backwardsMotors = document.getElementById("backwardsMotors").value;
 var textBox = "";
-var points = [];
 var redoList = [];
 var redoActionList = [];
 var canvas = document.getElementById("canvas");
@@ -77,6 +80,7 @@ function addAction(points, redoList) {
 }
 
 function addSpeedToList(points) {
+  if(1===1){
   const listOfPoints = document.querySelector("ol").children;
   for (i = 0; i < points.length; i++) {
     var currentSpeed = points[i].speedOfLine;
@@ -92,7 +96,8 @@ function addSpeedToList(points) {
     } else {
       listOfPoints[i].firstChild.innerText = `${text} ${currentSpeed}`;
     }
-  }
+  }}
+  else{console.log("radi")}
 }
 
 function addLiElement(listId, x, y) {
@@ -750,7 +755,6 @@ function clearPath(canvasContext, img) {
   points.splice(0, points.length);
 
   document.querySelector("ol").innerHTML = "";
-  points = [];
   redoList = [];
   textBox = "";
   document.getElementById("x_coord").value = "";

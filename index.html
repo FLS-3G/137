@@ -47,9 +47,8 @@
            You can go and read help <a class="text" onclick="scrollSmooth('help_link')"">here</a>.
          </p>
          
-         <button class="button" onclick="startingUp()">Facing up</button>
+         <button class="button" onclick="startingUp() ">Facing up</button>
          <button class="button" onclick="startingRight()">Facing right </button>
-        <button calss="button" > <input type="file" onchange="onChange(event)"></button>
        </div>
      </div>
      <div class="order_information">
@@ -133,7 +132,7 @@
       <button id="alignButton" type="button" onclick="wallAlign(points)" >Wall Align</button>
       <button id="squaring" type="button" onclick="lineSquaring(points)">Line Squaring</button>
       <button id="addActionWhileMoving" type="button" onclick="addActionWhileMoving(points,redoList)">Action While Moving</button>
-      
+      <button calss="button" > <input type="file" onchange="onChange(event)"></button>
 
       Show Hitbox
       <input type="checkbox"  id="robotHitbox" onclick="redraw(ctx, img, points)"/>
