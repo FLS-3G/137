@@ -1,12 +1,12 @@
 var points = [];
 var load = 0;
 var scroll = 0;
-function loadEnable (){
+function loadEnable() {
   load = 1;
 }
-window.addEventListener('scroll', function() {
+window.addEventListener("scroll", function() {
   scroll = window.scrollY;
-    })
+});
 
 function clearCanvas(canvasContext, img) {
   canvasContext.clearRect(0, 0, 800, 400);
@@ -14,7 +14,6 @@ function clearCanvas(canvasContext, img) {
   canvasContext.drawImage(img, 0, 0, 800, 400);
   canvasContext.globalAlpha = 1;
 }
-
 
 function addActionWhileMoving(point, redoList) {
   points[points.length - 2].actionsYesOrNo =
@@ -31,10 +30,10 @@ function onChange(event) {
   reader.onload = function(e) {
     var rtf = "";
     var rtf = e.target.result;
-    var lastLine = getLastLineBreak(rtf,"^");
-    var endLine = getLastLineBreak (rtf,"]");
+    var lastLine = getLastLineBreak(rtf, "^");
+    var endLine = getLastLineBreak(rtf, "]");
     endLine = endLine - lastLine - 1;
-    rtf = rtf.substr(lastLine,endLine);
+    rtf = rtf.substr(lastLine, endLine);
     var x = [];
     var y = [];
     var d = [];
@@ -47,54 +46,57 @@ function onChange(event) {
     var realD = [];
     var realA = [];
     var realS = [];
-    for(var i = 0;i<endLine;i++){
-      if(rtf.charAt(i) == "x"){
+    for (var i = 0; i < endLine; i++) {
+      if (rtf.charAt(i) == "x") {
         x.push(i);
-     }
-     if(rtf.charAt(i) == "y"){
-      y.push(i);
-   }
-   if(rtf.charAt(i) == "d"){
-    d.push(i);
- }
- if(rtf.charAt(i) == "a"){
-  a.push(i);
-}
-if(rtf.charAt(i) == "s"){
-  s.push(i);
-}
+      }
+      if (rtf.charAt(i) == "y") {
+        y.push(i);
+      }
+      if (rtf.charAt(i) == "d") {
+        d.push(i);
+      }
+      if (rtf.charAt(i) == "a") {
+        a.push(i);
+      }
+      if (rtf.charAt(i) == "s") {
+        s.push(i);
+      }
     }
-    for (i=0;i<y.length;i++){
+    for (i = 0; i < y.length; i++) {
       long = y[i] - x[i] - 1;
-      first = x[i]+1;
-      realX.push(rtf.substr(first,long));
+      first = x[i] + 1;
+      realX.push(rtf.substr(first, long));
       long = d[i] - y[i] - 1;
-      first = y[i]+1;
-      realY.push(rtf.substr(first,long));
+      first = y[i] + 1;
+      realY.push(rtf.substr(first, long));
       long = a[i] - d[i] - 1;
-      first = d[i]+1;
-      realD.push(rtf.substr(first,long));
+      first = d[i] + 1;
+      realD.push(rtf.substr(first, long));
       long = s[i] - a[i] - 1;
-      first = a[i]+1;
-      realA.push(rtf.substr(first,long));
-      long = x[i+1] - s[i] - 1;
-      first = s[i]+1;
-      realS.push(rtf.substr(first,long));
+      first = a[i] + 1;
+      realA.push(rtf.substr(first, long));
+      long = x[i + 1] - s[i] - 1;
+      first = s[i] + 1;
+      realS.push(rtf.substr(first, long));
     }
-    for(i=0;i<realD.length;i++){
-      if (realD[i] == 0){
+    for (i = 0; i < realD.length; i++) {
+      if (realD[i] == 0) {
         realD[i] = undefined;
       }
-      if (realD[i] == 2){
+      if (realD[i] == 2) {
         realD[i] = 2;
       }
-      addCoord(undefined,realX[i],realY[i],realD[i],true);
-      points[i].speedOfLine = realS[i];
-      if (realA[i] == 1 || realA[i] == 3){
-        addAction(points,redoList);
+      if (realD[i] == 1) {
+        realD[i] = 1;
       }
-      if(i > 0 && (realA[i-1] == 2 || realA[i-1] == 3)){
-        addActionWhileMoving(points,redoList);
+      addCoord(undefined, realX[i], realY[i], realD[i], true);
+      points[i].speedOfLine = realS[i];
+      if (realA[i] == 1 || realA[i] == 3) {
+        addAction(points, redoList);
+      }
+      if (i > 0 && (realA[i - 1] == 2 || realA[i - 1] == 3)) {
+        addActionWhileMoving(points, redoList);
       }
     }
     load = 0;
@@ -102,13 +104,15 @@ if(rtf.charAt(i) == "s"){
 
   reader.readAsText(file);
 }
-function getLastLineBreak (content,text) {
-  var reversed = content.split("").reverse().join("");
-  var index = content.length-reversed.indexOf(text);
-  
-  return index
-}
+function getLastLineBreak(content, text) {
+  var reversed = content
+    .split("")
+    .reverse()
+    .join("");
+  var index = content.length - reversed.indexOf(text);
 
+  return index;
+}
 
 var facing = "up";
 var axleLength = document.getElementById("axleLength").value;
@@ -147,23 +151,24 @@ function addAction(points, redoList) {
 }
 
 function addSpeedToList(points) {
-  if(1===1){
-  const listOfPoints = document.querySelector("ol").children;
-  for (i = 0; i < points.length; i++) {
-    var currentSpeed = points[i].speedOfLine;
-    if (i === points.length - 1) {
-      currentSpeed = "---";
-    }
+  if (1 === 1) {
+    const listOfPoints = document.querySelector("ol").children;
+    for (i = 0; i < points.length; i++) {
+      var currentSpeed = points[i].speedOfLine;
+      if (i === points.length - 1) {
+        currentSpeed = "---";
+      }
 
-    const text = listOfPoints[i].firstChild.innerText;
-    if (text.includes(") ")) {
-      newText = text.split(") ");
-      newText[1] = currentSpeed;
-      listOfPoints[i].firstChild.innerText = newText.join(") ");
-    } else {
-      listOfPoints[i].firstChild.innerText = `${text} ${currentSpeed}`;
+      const text = listOfPoints[i].firstChild.innerText;
+      if (text.includes(") ")) {
+        newText = text.split(") ");
+        newText[1] = currentSpeed;
+        listOfPoints[i].firstChild.innerText = newText.join(") ");
+      } else {
+        listOfPoints[i].firstChild.innerText = `${text} ${currentSpeed}`;
+      }
     }
-  }}
+  }
 }
 
 function addLiElement(listId, x, y) {
@@ -566,7 +571,10 @@ function drawPoints(canvasContext, points) {
             angle = angle + 180;
           }
 
-          if (points[j].actionsYesOrNo === 1 || points[j].actionsYesOrNo === 3) {
+          if (
+            points[j].actionsYesOrNo === 1 ||
+            points[j].actionsYesOrNo === 3
+          ) {
             drawCircle(canvasContext, points[j], "#00cd00");
           } else {
             drawCircle(canvasContext, points[j], "yellow");
@@ -602,7 +610,10 @@ function drawPoints(canvasContext, points) {
             }
           }
 
-          if (points[j].actionsYesOrNo === 1 || points[j].actionsYesOrNo === 3) {
+          if (
+            points[j].actionsYesOrNo === 1 ||
+            points[j].actionsYesOrNo === 3
+          ) {
             drawCircle(canvasContext, points[j], "#00cd00");
           } else {
             drawCircle(canvasContext, points[j], "yellow");
@@ -775,8 +786,8 @@ function onCanvasClick(event) {
   redraw(ctx, img, points);
   addLiElement(
     "orderedList",
-    Math.round((x / 3.386)*10)/10,
-    Math.round(((y / 3.386) * -1 + 114.29)*10)/10
+    Math.round((x / 3.386) * 10) / 10,
+    Math.round(((y / 3.386) * -1 + 114.29) * 10) / 10
   );
   if (redoList.length > 1) {
     if (redoList[redoList.length - 1].type === "emptyAction") {
@@ -1158,7 +1169,7 @@ function update(points, redoList) {
   } else {
     document.getElementById("loadFake").removeAttribute("disabled");
   }
-  
+
   if (points.length === 0) {
     document.getElementById("clearPath").setAttribute("disabled", "");
   } else {
@@ -1268,8 +1279,8 @@ function redoButton(redoList, points) {
     points.push(current);
     addLiElement(
       "orderedList",
-      Math.round((current.coordinates[0] / 3.386)*10)/10,
-      Math.round(((current.coordinates[1] / 3.386) * -1 + 114.29)*10)/10
+      Math.round((current.coordinates[0] / 3.386) * 10) / 10,
+      Math.round(((current.coordinates[1] / 3.386) * -1 + 114.29) * 10) / 10
     );
   }
 
@@ -1385,11 +1396,12 @@ function coordCheck() {
     }
   }
 }
-function scrollToTopFunction (){
+function scrollToTopFunction() {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth',
-  })}
+    behavior: "smooth"
+  });
+}
 function scrollSmooth(id, type = "#") {
   const section = document.querySelector(`${type}${id}`);
   section.scrollIntoView({ behavior: "smooth" });
