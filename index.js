@@ -1153,7 +1153,7 @@ function update(points, redoList) {
   } else {
     document.getElementById("Undo").removeAttribute("disabled");
   }
-  if (points.length !== 0) {
+  if (points.length !== 0 || redoList.length !== 0) {
     document.getElementById("loadFake").setAttribute("disabled", "");
   } else {
     document.getElementById("loadFake").removeAttribute("disabled");
