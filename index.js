@@ -701,14 +701,14 @@ function drawLine(canvasContext, pointA, pointB) {
     pointB.direction === "forwards" &&
     (pointA.actionsYesOrNo === 2 || pointA.actionsYesOrNo === 3)
   ) {
-    colorLine(canvasContext, pointA, pointB, "#831100", 7);
-    colorLine(canvasContext, pointA, pointB, "Yellow", 3);
+    colorLine(canvasContext, pointA, pointB, "#00cd00", 7);
+    colorLine(canvasContext, pointA, pointB, "#FF2600", 3);
   } else if (
     pointB.direction === "backwards" &&
     (pointA.actionsYesOrNo === 2 || pointA.actionsYesOrNo === 3)
   ) {
-    colorLine(canvasContext, pointA, pointB, "#002E7A", 7);
-    colorLine(canvasContext, pointA, pointB, "Yellow", 3);
+    colorLine(canvasContext, pointA, pointB, "#00cd00", 7);
+    colorLine(canvasContext, pointA, pointB, "#0433FF", 3);
   } else {
     colorLine(canvasContext, pointA, pointB, "#002E7A", 7);
     colorLine(canvasContext, pointA, pointB, "#0433FF", 3);
