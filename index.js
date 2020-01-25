@@ -621,11 +621,7 @@ function drawPoints(canvasContext, points) {
           }
         }
       } else {
-        if (facing === "up") {
-          var angle = 0;
-        } else {
-          var angle = 90;
-        }
+        angle = Number(document.getElementById("textboxAngle").value);
         if (j < 1) {
         } else {
           var deltaX = points[j].coordinates[0] - points[j - 1].coordinates[0];

@@ -422,6 +422,7 @@ function vectorize(points) {
 }
 
 function calculateInitialAngle(points, facing) {
+  var firstAngle = Number(document.getElementById("textboxAngle").value);
   const checkForDirection = points[1].direction;
   const firstPoint = points[0].coordinates;
   const secondPoint = points[1].coordinates;
@@ -453,8 +454,8 @@ function calculateInitialAngle(points, facing) {
         }
       }
     }
-
-    return ((start * 180) / Math.PI) * -1;
+    return ((start * 180) / Math.PI) * -1 + firstAngle;
+    
   } else if (checkForDirection === "backwards") {
     if (facing === "right") {
       if (vec[1] <= 0) {
