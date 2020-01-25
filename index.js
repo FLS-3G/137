@@ -37,6 +37,7 @@ function onChange(event) {
     var x = [];
     var y = [];
     var d = [];
+    var t = [];
     var a = [];
     var s = [];
     var first = 0;
@@ -44,6 +45,7 @@ function onChange(event) {
     var realX = [];
     var realY = [];
     var realD = [];
+    var realT = [];
     var realA = [];
     var realS = [];
     for (var i = 0; i < endLine; i++) {
@@ -55,6 +57,9 @@ function onChange(event) {
       }
       if (rtf.charAt(i) == "d") {
         d.push(i);
+      }
+      if (rtf.charAt(i) == "t") {
+        t.push(i);
       }
       if (rtf.charAt(i) == "a") {
         a.push(i);
@@ -70,9 +75,12 @@ function onChange(event) {
       long = d[i] - y[i] - 1;
       first = y[i] + 1;
       realY.push(rtf.substr(first, long));
-      long = a[i] - d[i] - 1;
+      long = t[i] - d[i] - 1;
       first = d[i] + 1;
       realD.push(rtf.substr(first, long));
+      long = a[i] - t[i] - 1;
+      first = t[i] + 1;
+      realT.push(rtf.substr(first, long));
       long = s[i] - a[i] - 1;
       first = a[i] + 1;
       realA.push(rtf.substr(first, long));
@@ -92,6 +100,7 @@ function onChange(event) {
       }
       addCoord(undefined, realX[i], realY[i], realD[i], true);
       points[i].speedOfLine = realS[i];
+      points[i].speedOfTurn = realT[i];
       if (realA[i] == 1 || realA[i] == 3) {
         addAction(points, redoList);
       }
@@ -151,14 +160,13 @@ function addAction(points, redoList) {
 }
 
 function addSpeedToList(points) {
-  if (1 === 1) {
     const listOfPoints = document.querySelector("ol").children;
     for (i = 0; i < points.length; i++) {
-      var currentSpeed = points[i].speedOfLine;
-      if (i === points.length - 1) {
-        currentSpeed = "---";
+      if (i === 0) {
+        var currentSpeed = "---";
       }
-
+      else{
+      var currentSpeed = points[i-1].speedOfLine;}
       const text = listOfPoints[i].firstChild.innerText;
       if (text.includes(") ")) {
         newText = text.split(") ");
@@ -167,9 +175,26 @@ function addSpeedToList(points) {
       } else {
         listOfPoints[i].firstChild.innerText = `${text} ${currentSpeed}`;
       }
-    }
-  }
+    }  
 }
+
+function addTurningSpeedToList(points) {
+  const listOfPoints = document.querySelector("ol").children;
+  for (i = 0; i < points.length; i++) {
+    var currentTurningSpeed = points[i].speedOfTurn;
+    if(i === points.length-1){
+      var currentTurningSpeed ="---";
+    }
+    const text = listOfPoints[i].firstChild.innerText;
+    listOfPoints[i].firstChild.innerText = `${text} ${currentTurningSpeed}`;
+      
+  }  
+}
+
+function turningSpeed(){
+  points[points.length-1].speedOfLine=document.querySelector("#angleSpeed").value;
+}
+
 
 function addLiElement(listId, x, y) {
   var speed = document.getElementById("speed").value;
@@ -767,7 +792,8 @@ function onCanvasClick(event) {
       direction: "backwards",
       type: "waypoint",
       actionsYesOrNo: 0,
-      speedOfLine: speed
+      speedOfLine: speed,
+      speedOfTurn: document.querySelector("#angleSpeed").value
     });
   } else {
     points.push({
@@ -775,7 +801,8 @@ function onCanvasClick(event) {
       direction: "forwards",
       type: "waypoint",
       actionsYesOrNo: 0,
-      speedOfLine: speed
+      speedOfLine: speed,
+      speedOfTurn: document.querySelector("#angleSpeed").value
     });
   }
 
@@ -1211,6 +1238,7 @@ function update(points, redoList) {
     document.getElementById("create").removeAttribute("disabled", "");
   }
   addSpeedToList(points);
+  addTurningSpeedToList(points);
 }
 
 function openModal() {
@@ -1326,7 +1354,8 @@ function addCoord(
         direction: "alignment",
         type: "waypoint",
         actionsYesOrNo: 0,
-        speedOfLine: document.querySelector("#speed").value
+        speedOfLine: document.querySelector("#speed").value,
+        speedOfTurn: document.querySelector("#angleSpeed").value
       });
     }
     if (shift === 2) {
@@ -1335,7 +1364,8 @@ function addCoord(
         direction: "backwards",
         type: "waypoint",
         actionsYesOrNo: 0,
-        speedOfLine: document.querySelector("#speed").value
+        speedOfLine: document.querySelector("#speed").value,
+        speedOfTurn: document.querySelector("#angleSpeed").value
       });
     } else if (shift === undefined) {
       points.push({
@@ -1343,7 +1373,8 @@ function addCoord(
         direction: "forwards",
         type: "waypoint",
         actionsYesOrNo: 0,
-        speedOfLine: document.querySelector("#speed").value
+        speedOfLine: document.querySelector("#speed").value,
+        speedOfTurn: document.querySelector("#angleSpeed").value
       });
     }
     addLiElement("orderedList", x, y);

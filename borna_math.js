@@ -659,8 +659,8 @@ function action(id) {
   return `3${ln}${id}${ln}`;
 }
 
-function movement(angle, distance, speed) {
-  return `2${ln}${angle}${ln}${distance}${ln}${speed}${ln}`;
+function movement(angle, turnSpeed, distance, speed) {
+  return `2${ln}${angle}${ln}${turnSpeed}${ln}${distance}${ln}${speed}${ln}`;
 }
 
 function alignment(speed) {
@@ -709,6 +709,7 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
     if (listForGeneration[i].direction !== "alignment") {
       textBox += movement(
         angles[i - 1],
+        points[i-1].speedOfTurn,
         lengths[i - 1] / 3.386 / (wheelSize * Math.PI),
         points[i - 1].speedOfLine
       );
@@ -747,6 +748,8 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
       direction = 1;
     }
     textBox +=direction;
+    textBox +="t";
+    textBox +=points[i].speedOfTurn;
     textBox +="a";
     textBox +=points[i].actionsYesOrNo;
     textBox +="s";
