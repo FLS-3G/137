@@ -181,9 +181,9 @@ function addSpeedToList(points) {
 function addTurningSpeedToList(points) {
   const listOfPoints = document.querySelector("ol").children;
   for (i = 0; i < points.length; i++) {
-    var currentTurningSpeed = points[i].speedOfTurn;
-    if(i === points.length-1){
-      var currentTurningSpeed ="---";
+      var currentTurningSpeed = points[i].speedOfTurn;
+    if (i === 0){
+      var currentTurningSpeed = "---";
     }
     const text = listOfPoints[i].firstChild.innerText;
     listOfPoints[i].firstChild.innerText = `${text} ${currentTurningSpeed}`;
@@ -192,7 +192,7 @@ function addTurningSpeedToList(points) {
 }
 
 function turningSpeed(){
-  points[points.length-1].speedOfLine=document.querySelector("#angleSpeed").value;
+  points[points.length-1].speedOfTurn=document.querySelector("#angleSpeed").value;
 }
 
 

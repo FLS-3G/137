@@ -595,8 +595,18 @@ function redefineLastSpeed() {
       update(points, redoList);
       generateEstimate();
     }
-  }
+    if (points.length > 1) {
+      points[points.length - 2].speedOfTurn = document.getElementById(
+        "angeleSpeed"
+      ).value;
+      points[points.length - 1].speedOfTurn = document.getElementById(
+        "angeleSpeed"
+      ).value;
+      
+      update(points, redoList);
+  }}
 }
+
 
 function generateEstimate() {
   var wheelSize = document.getElementById("wheelSize").value;
@@ -709,7 +719,7 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
     if (listForGeneration[i].direction !== "alignment") {
       textBox += movement(
         angles[i - 1],
-        points[i-1].speedOfTurn,
+        points[i].speedOfTurn,
         lengths[i - 1] / 3.386 / (wheelSize * Math.PI),
         points[i - 1].speedOfLine
       );
