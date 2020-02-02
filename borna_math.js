@@ -5,11 +5,11 @@ function calculateTotalDistance(lengths) {
   }
   return totalDistance;
 }
-
+var turningAngles = [];
 function calculateLength(pointA, pointB) {
   var xdistance = pointB[0] - pointA[0];
   var ydistance = pointB[1] - pointA[1];
-  var length = Math.sqrt(xdistance ** 2 + ydistance ** 2);
+  var length = Math.sqrt(xdistance ** 2 + ydistance ** 2 );
   return length;
 }
 
@@ -453,8 +453,9 @@ function calculateInitialAngle(points, facing) {
             -1;
         }
       }
-    }
-    return ((start * 180) / Math.PI) * -1 + firstAngle;
+    }turningAngles[0]=(((start * 180) / Math.PI) * -1 + firstAngle);
+    return (((start * 180) / Math.PI) * -1 + firstAngle);
+    
     
   } else if (checkForDirection === "backwards") {
     if (facing === "right") {
@@ -501,7 +502,8 @@ function calculateInitialAngle(points, facing) {
       }
     }
 
-    return ((start * 180) / Math.PI) * -1;
+    turningAngles[0]=(((start * 180) / Math.PI) * -1 + firstAngle);
+    return (((start * 180) / Math.PI) * +1 - firstAngle);
   }
   console.warn("Invalid checkForDirection yo! Pls fix! ");
 }
@@ -514,6 +516,7 @@ function calculateAngles(vectors, points, facing) {
     for (var i = 0; i < vectors.length - 1; i++) {
       var angle = calculateAngle(vectors[i], vectors[i + 1], points, i + 1);
       angles.push(angle);
+      turningAngles.push(angle);
     }
   }
   return angles.map(item => item * -1);
@@ -582,65 +585,51 @@ function calculateAngle(vectorA, vectorB, points, pointNumber) {
   finalAngle = (finalAngle * 180) / Math.PI;
   return finalAngle;
 }
-
+var speedFix=undefined;
 function redefineLastSpeed() {
-  if (document.getElementById("speed").value !== "") {
-    if (points.length > 1) {
-      points[points.length - 2].speedOfLine = document.getElementById(
-        "speed"
-      ).value;
-      points[points.length - 1].speedOfLine = document.getElementById(
-        "speed"
-      ).value;
+  if (document.getElementById("speed").value === "") {speedFix=1}
+    else if (document.getElementById("speed").value !== "") {
+      if (points.length > 1) {  
+        if(speedFix=1){
+          points[points.length - 1].speedOfLine = document.getElementById("speed").value;
+        }
+        speedFix=0;
+      points[points.length - 2].speedOfLine = document.getElementById("speed").value;
       update(points, redoList);
       generateEstimate();
-    }
-    if (points.length > 1) {
-      points[points.length - 2].speedOfTurn = document.getElementById(
-        "angeleSpeed"
-      ).value;
-      points[points.length - 1].speedOfTurn = document.getElementById(
-        "angeleSpeed"
-      ).value;
-      
-      update(points, redoList);
   }}
+  if (document.getElementById("angleSpeed").value === "") {}
+    else if (document.getElementById("angleSpeed").value !== "") {
+      if (points.length > 1) {
+      points[points.length - 1].speedOfTurn = document.getElementById("angleSpeed").value;
+      update(points, redoList);}}
 }
 
 
 function generateEstimate() {
   var wheelSize = document.getElementById("wheelSize").value;
   var speed = document.getElementById("speed").value;
-
-  wheelSize = document.getElementById("wheelSize").value;
-  speed = document.getElementById("speed").value;
+  var turnSpeed =document.getElementById("angleSpeed").value;
+  var axleLength =document.getElementById("axleLength").value;
 
   lengths = calculateLengths(points);
 
-  if (wheelSize === "" || speed === "") {
+  if (wheelSize === "" || speed === "" || turnSpeed === "" || axleLength ==="") {
     var wrongParams = 1;
-    document
-      .getElementById("wheelSize")
-      .setAttribute("class", "add-point-error");
-    document.getElementById("speed").setAttribute("class", "add-point-error");
   } else {
-    if (wheelSize >= 1 && speed >= 1) {
+    if (wheelSize >= 1 && speed >= 1 && turnSpeed >=1 && axleLength >=1) {
       var wrongParams = 0;
       document.getElementById("wheelSize").setAttribute("class", "input_box");
       document.getElementById("speed").setAttribute("class", "input_box");
     } else {
       var wrongParams = 1;
-      document
-        .getElementById("wheelSize")
-        .setAttribute("class", "add-point-error");
-      document.getElementById("speed").setAttribute("class", "add-point-error");
     }
   }
   if (wrongParams === 1) {
     var time = "Wrong Parameters";
   } else {
     if (points.length <= 1) {
-      var time = 0;
+      var time = `0s`;
     } else {
       var timeForLine = 0;
       for (var i = 0; i < lengths.length; i++) {
@@ -649,12 +638,20 @@ function generateEstimate() {
         } else {
           var rot = 0.027625 * points[i].speedOfLine;
         }
+        if (points[i].speedOfTurn >= 80) {
+          var turnRot = 2.24;
+        } else {
+          var turnRot = 0.027625 * points[i].speedOfTurn;
+        }
+        var al = document.getElementById("axleLength").value;
+        var wd = wheelSize;
 
-        timeForLine += Math.round(
-          Math.abs(lengths[i]) / 3.386 / (wheelSize * Math.PI * rot)
-        );
+        timeForLine +=
+          Math.abs(lengths[i]) / 3.386 / (wheelSize * Math.PI * rot) + lengths.length * 0.4;
+            if(turningAngles[i]===NaN){console.log("ovdje")}else{ timeForLine=timeForLine + Math.abs(turningAngles[i] * (al/wd)) / 360/(wd * Math.PI * turnRot);}
+         var finalTime = Math.round(timeForLine);
       }
-      var time = `${timeForLine}s`;
+      var time = `${finalTime}s`;
     }
   }
   document.getElementById("time_estimate").innerHTML = time;
@@ -766,7 +763,21 @@ function makeTextBox(points, wheelSize, angles, speedOfLine) {
     textBox +=points[i].speedOfLine;
   }
   textBox +="x";
-  textBox +="]";
+  textBox += document.getElementById("wheelSize").value;
+  textBox += "w";
+  textBox += document.getElementById("axleLength").value;
+  textBox += "l";
+  textBox += document.getElementById("textboxA").value;
+  textBox += "f";
+  textBox += document.getElementById("textboxB").value;
+  textBox += "b";
+  textBox += document.getElementById("textboxD").value;
+  textBox += "p";
+  textBox += document.getElementById("textboxC").value;
+  textBox += "c";
+  textBox += motorsCheck();
+  textBox += "m";
+  textBox += "]";
 
 
   textBox = textBox.replace(/NaN/g, "0");

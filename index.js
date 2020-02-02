@@ -1,6 +1,8 @@
 var points = [];
 var load = 0;
 var scroll = 0;
+var addPointPossible = undefined;
+var lineSquaringPossible = undefined;
 function loadEnable() {
   load = 1;
 }
@@ -40,6 +42,13 @@ function onChange(event) {
     var t = [];
     var a = [];
     var s = [];
+    var w = 0;
+    var l = 0;
+    var f = 0;
+    var b = 0;
+    var p = 0;
+    var c = 0;
+    var m = 0;
     var first = 0;
     var long = 0;
     var realX = [];
@@ -67,6 +76,27 @@ function onChange(event) {
       if (rtf.charAt(i) == "s") {
         s.push(i);
       }
+      if (rtf.charAt(i) == "w") {
+        w=i;
+      }
+      if (rtf.charAt(i) == "l") {
+        l=i;
+      }
+      if (rtf.charAt(i) == "f") {
+        f=i;
+      }
+      if (rtf.charAt(i) == "b") {
+        b=i;
+      }
+      if (rtf.charAt(i) == "p") {
+        p=i;
+      }
+      if (rtf.charAt(i) == "c") {
+        c=i;
+      }
+      if (rtf.charAt(i) == "m") {
+        m=i;
+      }
     }
     for (i = 0; i < y.length; i++) {
       long = y[i] - x[i] - 1;
@@ -88,6 +118,27 @@ function onChange(event) {
       first = s[i] + 1;
       realS.push(rtf.substr(first, long));
     }
+    first=x[x.length - 1] + 1;
+    long=w - x[x.length - 1] - 1 ;
+    var wheelDiameter=rtf.substr(first, long);
+    first=w + 1;
+    long=l- w - 1 ;
+    var axleLength=rtf.substr(first, long);
+    first=l + 1;
+    long=f- l - 1 ;
+    var DTF=rtf.substr(first, long);
+    first=f + 1;
+    long=b- f - 1 ;
+    var DTB=rtf.substr(first, long);
+    first=b + 1;
+    long=p- b - 1 ;
+    var DTS=rtf.substr(first, long);
+    first=p + 1;
+    long=c- p - 1 ;
+    var DTCS=rtf.substr(first, long);
+    first=c + 1;
+    long=m- c - 1 ;
+    var motors=rtf.substr(first, long);
     for (i = 0; i < realD.length; i++) {
       if (realD[i] == 0) {
         realD[i] = undefined;
@@ -108,9 +159,17 @@ function onChange(event) {
         addActionWhileMoving(points, redoList);
       }
     }
+    document.getElementById("axleLength").setAttribute("value", axleLength);
+    document.getElementById("wheelSize").setAttribute("value", wheelDiameter);
+    document.getElementById("textboxA").setAttribute("value", DTF);
+    document.getElementById("textboxB").setAttribute("value", DTB);
+    document.getElementById("textboxD").setAttribute("value", DTS);
+    document.getElementById("textboxC").setAttribute("value", DTCS);
+    if(motors == "1"){
+      document.getElementById("backwardsMotors").setAttribute("checked",true);
+    }
     load = 0;
   };
-
   reader.readAsText(file);
 }
 function getLastLineBreak(content, text) {
@@ -189,10 +248,6 @@ function addTurningSpeedToList(points) {
     listOfPoints[i].firstChild.innerText = `${text} ${currentTurningSpeed}`;
       
   }  
-}
-
-function turningSpeed(){
-  points[points.length-1].speedOfTurn=document.querySelector("#angleSpeed").value;
 }
 
 
@@ -657,7 +712,7 @@ function drawPoints(canvasContext, points) {
           }
         }
       } else {
-        angle = Number(document.getElementById("textboxAngle").value);
+        angle = Number(document.getElementById("textboxAngle").value)* -1;
         if (j < 1) {
         } else {
           var deltaX = points[j].coordinates[0] - points[j - 1].coordinates[0];
@@ -778,6 +833,7 @@ function motorsCheck() {
 }
 
 function onCanvasClick(event) {
+  if(addPointPossible == 1){
   var x = event.x;
   var y = event.y;
 
@@ -822,7 +878,7 @@ function onCanvasClick(event) {
   }
 
   generateLists(points, speed);
-  update(points, redoList);
+  update(points, redoList);}
 }
 
 function undoButton(ctx, img, points, redoActionList) {
@@ -864,6 +920,16 @@ function clearPath(canvasContext, img) {
 }
 
 function update(points, redoList) {
+  addPointPossible = 1;
+  speedOfLineCheck();
+  speedOfTurnCheck();
+  axleLengthCheck();
+  wheelSizeCheck();
+  DTFCheck();
+  DTBCheck();
+  DTSCheck();
+  DTCSCheck();
+  coordCheck();
   if (points.length <= 1) {
     document.getElementById("squaring").setAttribute("disabled", "");
   } else {
@@ -1165,18 +1231,18 @@ function update(points, redoList) {
       }
     }
 
-    if (
+    if ((
       directionalIntersections.length < 1 ||
       distanceFormula[rememberI] < sensorDistance ||
       points[points.length - 1].direction === "alignment"
-    ) {
+    ) || lineSquaringPossible == 0 || addPointPossible == 0) {
       document.getElementById("squaring").setAttribute("disabled", "");
     } else {
       document.getElementById("squaring").removeAttribute("disabled");
     }
   }
   generateEstimate();
-  if (points.length === 0) {
+  if (points.length === 0 || addPointPossible == 0) {
     document.getElementById("alignButton").setAttribute("disabled", "");
   } else {
     document.getElementById("alignButton").removeAttribute("disabled");
@@ -1192,7 +1258,6 @@ function update(points, redoList) {
   } else {
     document.getElementById("loadFake").removeAttribute("disabled");
   }
-
   if (points.length === 0) {
     document.getElementById("clearPath").setAttribute("disabled", "");
   } else {
@@ -1397,30 +1462,146 @@ function addCoord(
   generateLists(points, speed);
 }
 
+
+function allowAddCoord (){
+  update(points,redoList);
+}
+function  angleCheck(){
+  var textboxAngle= document.getElementById("textboxAngle").value
+  if(textboxAngle>180 || textboxAngle<-180){
+    document.getElementById("textboxAngle").setAttribute("class", "add-point-error");
+    document.getElementById("setAngle").setAttribute("disabled", "");
+}else{
+  document.getElementById("textboxAngle").setAttribute("class", "input_box");
+  document.getElementById("setAngle").removeAttribute("disabled", "");}
+}
+
+function speedOfLineCheck() {
+  var speedLine = document.getElementById("speed").value
+  if(speedLine>100 || speedLine<=0){
+    document.getElementById("speed").setAttribute("class", "add-point-error");
+    document.getElementById("create").setAttribute("disabled", "");
+    addPointPossible = 0;
+  }
+}
+function speedOfTurnCheck() {
+  var speedTurn = document.getElementById("angleSpeed").value;
+  if ((speedTurn>100 || speedTurn<=0)){
+    document.getElementById("angleSpeed").setAttribute("class", "add-point-error");
+    document.getElementById("create").setAttribute("disabled", "");
+    document.getElementById("create").setAttribute("disabled", "");
+    document.getElementById("create").setAttribute("disabled", "");
+    addPointPossible = 0;
+  }else{
+    document.getElementById("angleSpeed").setAttribute("class", "input_box");
+  }
+}
+function wheelSizeCheck() {
+  var wheelSize = document.getElementById("wheelSize").value;
+  if ( wheelSize<=0){
+    document.getElementById("wheelSize").setAttribute("class", "add-point-error");
+    document.getElementById("create").setAttribute("disabled", "");
+  }
+  else{
+    document.getElementById("wheelSize").setAttribute("class", "input_box");
+    document.getElementById("create").removeAttribute("disabled", "");
+  }
+}
+function axleLengthCheck() {
+  var axleLength = document.getElementById("axleLength").value;
+  if ( axleLength<=0){
+    document.getElementById("axleLength").setAttribute("class", "add-point-error");
+    document.getElementById("create").setAttribute("disabled", "");
+  }
+  else{
+    document.getElementById("axleLength").setAttribute("class", "input_box");
+    document.getElementById("create").removeAttribute("disabled", "");
+  }
+}
+function DTFCheck() {
+  var textboxA = document.getElementById("textboxA").value;
+  if ( textboxA<=0){
+    document.getElementById("textboxA").setAttribute("class", "add-point-error");
+    addPointPossible = 0;
+  }
+  else{
+    document.getElementById("textboxA").setAttribute("class", "input_box");
+  }
+}
+function DTBCheck() {
+  var textboxB = document.getElementById("textboxB").value;
+  if ( textboxB<=0){
+    document.getElementById("textboxB").setAttribute("class", "add-point-error");
+    addPointPossible = 0;
+  }
+  else{
+    document.getElementById("textboxB").setAttribute("class", "input_box");
+  }
+}
+function DTSCheck() {
+  var textboxD = document.getElementById("textboxD").value;
+  if ( textboxD<=0){
+    document.getElementById("textboxD").setAttribute("class", "add-point-error");
+    addPointPossible = 0;
+  }
+  else{
+    document.getElementById("textboxD").setAttribute("class", "input_box");
+  }
+}
+function DTCSCheck() {
+  var textboxC = document.getElementById("textboxC").value;
+  if ( textboxC == ""){
+    document.getElementById("textboxC").setAttribute("class", "add-point-error");
+    document.getElementById("squaring").setAttribute("disabled", "");
+    lineSquaringPossible = 0;
+  }
+  else{
+    document.getElementById("textboxC").setAttribute("class", "input_box");
+    
+    lineSquaringPossible = 1;
+  }
+}
+
 function coordCheck() {
   x = document.getElementById("x_coord").value;
   y = document.getElementById("y_coord").value;
 
-  if (x == "" || y == "") {
+  if (x == "" && y == "") {
     document.getElementById("add_point").setAttribute("disabled", "");
-    document.getElementById("y_coord").setAttribute("class", "add-point-error");
+    document.getElementById("x_coord").setAttribute("class", "input_box");
+    document.getElementById("y_coord").setAttribute("class", "input_box");
+  }
+  else if(x=="" &&  y!=""){
     document.getElementById("x_coord").setAttribute("class", "add-point-error");
-  } else {
-    if (x <= 236 && y <= 114) {
-      if (x >= 0 && y >= 0) {
-        document.getElementById("add_point").removeAttribute("disabled");
-        document.getElementById("y_coord").setAttribute("class", "input_box");
+    document.getElementById("add_point").setAttribute("disabled", "");
+    if(y<0 || y>114){
+      document.getElementById("y_coord").setAttribute("class", "add-point-error");
+    }
+    else{
+      document.getElementById("y_coord").setAttribute("class", "input_box");}
+  }
+  else if(y=="" &&  x!=""){
+    document.getElementById("y_coord").setAttribute("class", "add-point-error");
+    document.getElementById("add_point").setAttribute("disabled", "");
+    if(x<0 || x>236){
+      document.getElementById("x_coord").setAttribute("class", "add-point-error");
+    }
+    else{
+      document.getElementById("x_coord").setAttribute("class", "input_box");}
+  }
+   else {
+     if (x <= 236 && x>=0) {
         document.getElementById("x_coord").setAttribute("class", "input_box");
       }
-    } else {
-      document.getElementById("add_point").setAttribute("disabled", "");
-      document
-        .getElementById("y_coord")
-        .setAttribute("class", "add-point-error");
-      document
-        .getElementById("x_coord")
-        .setAttribute("class", "add-point-error");
-    }
+      if (y <=114 && y >=0){
+        document.getElementById("y_coord").setAttribute("class", "input_box");
+      }
+      if((y <=114 && y >=0) && (x <= 236 && x>=0)){
+        document.getElementById("add_point").removeAttribute("disabled", "");
+      }
+  }
+  if(addPointPossible == 0){
+    document.getElementById("add_point").setAttribute("disabled", "");
   }
 }
 function scrollToTopFunction() {

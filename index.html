@@ -48,8 +48,8 @@
          </p>
          
          
-         Initial Angle:<input type="number" id="textboxAngle" class="input_box" value= 0>
-          <button class="button" onclick="startingUp() ">Set Angle</button>
+         Initial Angle:<input type="number" id="textboxAngle" class="input_box" value= 0 oninput="angleCheck()">
+          <button class="button" id="setAngle" onclick="startingUp() ">Set Angle</button>
        </div>
      </div>
      <div class="order_information">
@@ -118,13 +118,13 @@
 
      <div  id="AdvMode">
       DTF:
-      <input type="number" id="textboxA" class="input_box" value= 11.6 >
+      <input type="number" id="textboxA" class="input_box" value= 11.6 oninput="DTFCheck();allowAddCoord();">
       DTB:
-      <input type="number" id="textboxB" class="input_box" value= 4.4>
+      <input type="number" id="textboxB" class="input_box" value= 4.4 oninput="DTBCheck();allowAddCoord();">
       DTS:
-      <input type="number" id="textboxD" class="input_box" value= 7.6>
+      <input type="number" id="textboxD" class="input_box" value= 7.6 oninput="DTSCheck();allowAddCoord();">
       DTCS:
-      <input type="number" id="textboxC" class="input_box" value= 11.2>
+      <input type="number" id="textboxC" class="input_box" value= 11.2 oninput="DTCSCheck();allowAddCoord();update(points,redoList);">
      
        
       
@@ -137,8 +137,6 @@
 
       Show Hitbox
       <input type="checkbox"  id="robotHitbox" onclick="redraw(ctx, img, points)"/>
-      
-      <div>Angle Speed:<input type="number" id="angleSpeed" class="input_box2" value= 15 oninput=turningSpeed();redefineLastSpeed() ></div>
       
       
      </div>
@@ -177,7 +175,7 @@
                class="input_box"
                id="wheelSize"
                value = 6.24
-               oninput="generateEstimate()"
+               oninput="generateEstimate();wheelSizeCheck()"
              />
            </li>
            <li class="input_text">
@@ -187,7 +185,7 @@
                class="input_box"
                id="speed"
                value = 30
-               oninput="generateEstimate(); redefineLastSpeed()"
+               oninput="generateEstimate(); redefineLastSpeed();speedOfLineCheck();allowAddCoord();"
                
                
              />
@@ -205,11 +203,14 @@
                class="input_box"
                id="axleLength"
                value = 10.8
+               oninput=" axleLengthCheck()"
              />
            </li>
            <li class="input_text" id="align">
+             Turn Speed:<input type="number" id="angleSpeed" class="input_box" value= 15 oninput= allowAddCoord();speedOfTurnCheck();redefineLastSpeed() ></li>
+           <li class="input_text" id="align">
              Backwards Motors
-             <input type="checkbox"  id="backwardsMotors" />
+             <input type="checkbox"  id="backwardsMotors"/>
            </li>
            <input id="Load" style="display: none;" class="button" accept=".rtf" style="opacity: 0;" type="file" onchange="onChange(event)">
          </ul>
