@@ -283,7 +283,7 @@
        </div>
        <div class="text_section">
          <h3 id="buttons">Buttons</h3><br>
-         There are 6 buttons which you can use by left-clicking on them:
+         There are 5 buttons which you can use by left-clicking on them:
          <h4 class="section-link" id="add_actionb">Add Action</h4>
          The “Add Action” button is used to make a pause in the route which 
          allows you to program a specific task you need your robot to accomplish. 
@@ -306,7 +306,7 @@
        </div>
        <div class="text_section">
          <h3 id="inputs">Inputs</h3><br>
-         There are 3 other inputs, one checkbox and Estimated Route Time.
+         There are 4 other inputs, one checkbox and Estimated Route Time.
          <h4 class="section-link" id="wheel_diameter">Wheel diameter</h4>
          Enter the diameter of your wheel (in cm), this is used for calculating angles and 
          <a class="text" onclick="scrollSmooth('est_time')"
@@ -316,6 +316,8 @@
          <a class="text" onclick="scrollSmooth('est_time')"
            >Estimated route time.</a
          >
+         <h4 class="section-link" id="angle_speed_input">Angle Speed</h4>
+         This is the speed which the robot will use while turning.
          <h4 class="section-link" id="est_time">Estimated route time</h4>
          Estimated route time is calculated with
          <a class="text" onclick="scrollSmooth('wheel_diameter')"
@@ -345,7 +347,7 @@
          </div>
          <div class="text_section">
          <h3 id="Advanced Mode">Advanced Mode</h3><br>
-         There are 3 main features in the advanced mode of FLS:
+         There are 5 main features in the advanced mode of FLS:
          <h4 class="section-link" id="wallAlign">Wall Align</h4>
          Wall Align is a button which when clicked will "align" the robot to the current closest wall.
          You can align the front side of your robot to the wall by just clicking the button, or you can shift-click on the button and 
@@ -359,6 +361,10 @@
          a black line on which it will align itself to face perpendicular to it. For this your robot will need 2 color sensors.
          <br><br>To use this feature you will need to fill in the <a class="text" onclick="scrollSmooth('dtcs')"
          >DTCS</a> box.
+         <h4 class="section-link" id="load_file">Load</h4>
+         You can load old route files back into FLS so you can continue programming.
+         <h4 class="section-link" id="action_while_moving">Action While Moving</h4>
+         This adds an action which the robot will do while it is moving between 2 points.
          <h4 class="section-link" id="showHitbox">Show Hitbox</h4>
      Show Hitbox is a checkbox that will display the size and direction of your robot on the mat.
 <br><br> To use this feature you will need to fill in the <a class="text" onclick="scrollSmooth('dtf')"
