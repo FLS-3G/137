@@ -890,6 +890,9 @@ function undoButton(ctx, img, points, redoActionList) {
   if (point.actionsYesOrNo === 1) {
     redoList.push({ type: "emptyAction" });
     points[points.length - 1].actionsYesOrNo = 0;
+    var childElementCount = liToKill.childElementCount;
+    var ulToKill = liToKill.lastChild;
+    ulToKill.firstChild.remove();
   } else if (points.length > 1 && pastPoint.actionsYesOrNo === 2) {
     redoList.push({ type: "emptyActionWhileMoving" });
     points[points.length - 2].actionsYesOrNo = 0;
