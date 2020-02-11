@@ -18,6 +18,15 @@ function clearCanvas(canvasContext, img) {
 }
 
 function addActionWhileMoving(point, redoList) {
+  var orderedListSelect = document.querySelector("ol");
+  var lastLiSelect =
+    orderedListSelect.childNodes[orderedListSelect.childElementCount - 2];
+  var UlSelect = lastLiSelect.querySelector("ul");
+  var textInLiInUl = document.createTextNode("[Action While Moving]");
+  var liInUl = document.createElement("li");
+  liInUl.setAttribute("class", "liInUl");
+  liInUl.appendChild(textInLiInUl);
+  UlSelect.appendChild(liInUl);
   points[points.length - 2].actionsYesOrNo =
     points[points.length - 2].actionsYesOrNo + 2;
   var lastPoint = points[points.length - 2];
@@ -886,6 +895,7 @@ function undoButton(ctx, img, points, redoActionList) {
   var pastPoint = points[points.length - 2];
   var ol = document.getElementById("orderedList");
   var liToKill = ol.childNodes[points.length - 1];
+  var liToKill2 = ol.childNodes[points.length - 2];
 
   if (point.actionsYesOrNo === 1) {
     redoList.push({ type: "emptyAction" });
@@ -896,9 +906,26 @@ function undoButton(ctx, img, points, redoActionList) {
   } else if (points.length > 1 && pastPoint.actionsYesOrNo === 2) {
     redoList.push({ type: "emptyActionWhileMoving" });
     points[points.length - 2].actionsYesOrNo = 0;
+    var childElementCount = liToKill2.childElementCount;
+    var ulToKill = liToKill2.lastChild;
+    ulToKill.firstChild.remove();
   } else if (points.length > 1 && pastPoint.actionsYesOrNo === 3) {
     redoList.push({ type: "emptyActionWhileMoving" });
     points[points.length - 2].actionsYesOrNo = 1;
+    var childElementCount = liToKill2.childElementCount;
+    var ulToKill = liToKill2.lastChild;
+    ulToKill.firstChild.remove();
+    var childElementCount = liToKill2.childElementCount;
+    var ulToKill = liToKill2.lastChild;
+    ulToKill.firstChild.remove(); var orderedListSelect = document.querySelector("ol");
+    var lastLiSelect =
+      orderedListSelect.childNodes[orderedListSelect.childElementCount - 2];
+    var UlSelect = lastLiSelect.querySelector("ul");
+    var textInLiInUl = document.createTextNode("[Action]");
+    var liInUl = document.createElement("li");
+    liInUl.setAttribute("class", "liInUl");
+    liInUl.appendChild(textInLiInUl);
+    UlSelect.appendChild(liInUl);
   } else {
     var redoElement = points.pop();
     redoList.push(redoElement);
@@ -1360,6 +1387,15 @@ function redoButton(redoList, points) {
     liInUl.appendChild(textInLiInUl);
     UlSelect.appendChild(liInUl);
   } else if (current.type === "emptyActionWhileMoving") {
+    var orderedListSelect = document.querySelector("ol");
+    var lastLiSelect =
+      orderedListSelect.childNodes[orderedListSelect.childElementCount - 2];
+    var UlSelect = lastLiSelect.querySelector("ul");
+    var textInLiInUl = document.createTextNode("[Action While Moving]");
+    var liInUl = document.createElement("li");
+    liInUl.setAttribute("class", "liInUl");
+    liInUl.appendChild(textInLiInUl);
+    UlSelect.appendChild(liInUl);
     points[points.length - 2].actionsYesOrNo += 2;
     var orderedListSelect = document.querySelector("ol");
     var lastLiSelect =
