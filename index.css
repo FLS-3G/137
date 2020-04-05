@@ -259,6 +259,12 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: bold;
 }
+#backwardsMotors:hover{
+  cursor: pointer;
+}
+#robotHitbox:hover{
+  cursor: pointer;
+}
 .ulNew:empty {
   display: none;
 }
